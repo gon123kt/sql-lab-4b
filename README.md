@@ -45,4 +45,4 @@ Creado originalmente para el curso 4.º B del CPEM N.º 17.
 
 Licencia
 
-Este recurso se distribuye bajo una licencia abierta (ej. CC BY-SA), lo que permite su uso, modificación y redistribución con atribución correspondiente.
+Este recurso se distribuye bajo una licencia abierta Creative Commons Legal Code, lo que permite su uso, modificación y redistribución con atribución correspondiente.
