@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+<head> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#F3EFE5">
@@ -435,6 +435,79 @@ table.rtable{width:100%;border-collapse:collapse;font-family:var(--mono);font-si
   .cert .name-input{font-size:19px}
   .cert .seal{width:82px;height:82px;font-size:11px}
 }
+
+/* ============ FOOTER ============ */
+footer.site-footer{
+  border-top:1.5px solid var(--hair2);
+  padding:28px clamp(16px,4vw,36px) 34px;
+  max-width:1280px;
+  margin:0 auto;
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px 28px;
+  align-items:flex-start;
+  justify-content:space-between;
+  font-size:12.5px;
+  color:var(--soft);
+}
+footer.site-footer .dev-credit{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.02em;
+  line-height:1.6;
+}
+footer.site-footer .dev-credit strong{
+  color:var(--ink);
+  font-weight:600;
+}
+footer.site-footer .license-box{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.04em;
+  line-height:1.7;
+  text-align:right;
+  max-width:460px;
+}
+footer.site-footer .license-box a{
+  color:var(--green-deep);
+  text-decoration:none;
+  border-bottom:1px dotted var(--green);
+}
+footer.site-footer .license-box a:hover{
+  color:var(--green);
+  border-bottom-style:solid;
+}
+footer.site-footer .license-box .cc-line{
+  display:block;
+  margin-bottom:2px;
+}
+footer.site-footer .links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 14px;
+  margin-top:4px;
+  justify-content:flex-end;
+}
+footer.site-footer .links a{
+  color:var(--soft);
+  font-family:var(--mono);
+  font-size:10.5px;
+  text-decoration:none;
+  border:1.5px solid var(--hair2);
+  border-radius:6px;
+  padding:3px 9px;
+  transition:.12s;
+}
+footer.site-footer .links a:hover{
+  border-color:var(--green);
+  color:var(--green-deep);
+  background:var(--green-soft);
+}
+@media (max-width:740px){
+  footer.site-footer{flex-direction:column;align-items:flex-start;text-align:left}
+  footer.site-footer .license-box{text-align:left;max-width:100%}
+  footer.site-footer .links{justify-content:flex-start}
+}
 </style>
 </head>
 <body>
@@ -715,6 +788,35 @@ REVOKE DELETE ON estudiantes FROM alumno_consulta;</pre>
 <div class="modal-root" id="modalRoot"></div>
 <div class="toasts" id="toasts"></div>
 
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="dev-credit">
+    Desarrollado por <strong>Matias Gonzalo Donaire</strong>
+  </div>
+  <div class="license-box">
+    <span class="cc-line">
+      Creative Commons Legal Code
+      <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">
+        CC0 1.0 Universal
+      </a>
+    </span>
+    <span class="cc-line">
+      Public Domain Dedication · creativecommons.org/publicdomain/zero/1.0
+    </span>
+    <div class="links">
+      <a href="https://gon123kt.github.io/sql-lab-4b/" target="_blank" rel="noopener">
+        gon123kt.github.io/sql-lab-4b
+      </a>
+      <a href="https://educanqn.com.ar/informatica/base_de_datos/" target="_blank" rel="noopener">
+        educanqn.com.ar/informatica/base_de_datos
+      </a>
+      <a href="https://github.com/gon123kt" target="_blank" rel="noopener">
+        Repositorios en GitHub
+      </a>
+    </div>
+  </div>
+</footer>
+
 <script>
 'use strict';
 /* ==================================================================
@@ -722,6 +824,7 @@ REVOKE DELETE ON estudiantes FROM alumno_consulta;</pre>
    v7: header responsive en dos filas para celulares, subtítulo
    abreviado, sin auto-zoom de iOS en la consola, toasts a lo ancho
    y ajustes tipográficos para pantallas chicas.
+   + footer con atribución, licencia CC0 1.0 y enlaces del autor.
 ================================================================== */
 
 /* ---------- utilidades ---------- */
@@ -1970,844 +2073,4 @@ var LEVELS=[
 },
 {
   n:9, cat:'DML · Agregación', title:'ORDER BY y GROUP BY',
-  theory:'<p><strong>ORDER BY</strong> ordena el resultado: <span class="mono">ASC</span> ascendente (es el valor por defecto) y <span class="mono">DESC</span> descendente.</p><p><strong>GROUP BY</strong> junta las filas que comparten un mismo valor y permite calcular por grupo con las funciones de agregación: <span class="mono">COUNT</span> cuenta, <span class="mono">SUM</span> suma, <span class="mono">AVG</span> promedia, <span class="mono">MIN</span>/<span class="mono">MAX</span> dan los extremos. Con <strong>HAVING</strong> filtrás los grupos <em>ya calculados</em> (WHERE filtra filas; HAVING filtra grupos).</p>',
-  syntax:'SELECT vendedor, SUM(monto) FROM ventas\nGROUP BY vendedor\nHAVING SUM(monto) > 200000\nORDER BY SUM(monto) DESC;',
-  syntaxNote:'WHERE filtra filas ANTES de agrupar · HAVING filtra grupos DESPUÉS',
-  brief:'Planilla de ventas de la tienda escolar, tabla <span class="mono">ventas</span> (12 filas, 4 vendedores):<br><strong>1)</strong> Mostrá todas las ventas ordenadas por <span class="mono">monto</span> de <strong>mayor a menor</strong>.<br><strong>2)</strong> Calculá cuánto facturó <strong>cada vendedor</strong>: agrupá por vendedor y sumá el monto.',
-  editor:'-- Tabla: ventas (id, vendedor, producto, monto)\n',
-  objectives:[
-    { id:'o1',
-      text:'Ventas ordenadas por monto descendente (ORDER BY … DESC).',
-      check:function(){
-        var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='ventas' && !!h.stmt.orderBy; });
-        return arr.some(function(h){
-          var ob=h.stmt.orderBy[0];
-          return ob.col==='monto' && ob.dir==='desc' && h.result.rows.length>0;
-        });
-      }
-    },
-    { id:'o2',
-      text:'Total facturado por vendedor: GROUP BY vendedor con SUM(monto).',
-      check:function(){
-        var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='ventas' && !!h.stmt.groupBy; });
-        return arr.some(function(h){
-          if(h.stmt.groupBy.indexOf('vendedor')<0){ return false; }
-          var hasSum=h.stmt.items.some(function(it){ return it.agg && it.agg.fn==='SUM' && it.agg.arg==='monto'; });
-          return hasSum && h.result.rows.length>=3;
-        });
-      }
-    }
-  ],
-  bonusText:'Con HAVING: dejá solo los vendedores cuyo total facturado supere los 200000.',
-  bonusCheck:function(){
-    return okHist().some(function(h){ return h.stmt.type==='select' && h.stmt.from==='ventas' && !!h.stmt.having; });
-  },
-  hint:'1) SELECT * FROM ventas ORDER BY monto DESC; · 2) SELECT vendedor, SUM(monto) FROM ventas GROUP BY vendedor;',
-  solution:'SELECT * FROM ventas ORDER BY monto DESC;\n\nSELECT vendedor, SUM(monto) AS total\nFROM ventas\nGROUP BY vendedor;'
-},
-{
-  n:10, cat:'Todo junto', title:'Desafío final',
-  theory:'<p>Todo lo aprendido, en una sola base. Antes de escribir, pensá el plan: <strong>1)</strong> ¿qué tabla uso? <strong>2)</strong> ¿qué filas sobreviven al WHERE? <strong>3)</strong> ¿agrego, cambio o agrupo algo? <strong>4)</strong> ¿en qué orden muestro el resultado?</p><p>Las cuatro misiones se validan por separado: podés resolverlas en cualquier orden. Cuando las cuatro estén, te llevás el certificado del curso.</p>',
-  syntax:'-- Usá todo: SELECT con WHERE + AND + ORDER BY,\n-- INSERT, UPDATE, GROUP BY con COUNT.\n-- Tabla: estudiantes (id, nombre, comision, nota, regular)\n-- regular: 1 = sí, 0 = no',
-  syntaxNote:'Respirá hondo y leé cada misión dos veces antes de tipear',
-  brief:'Base final: <span class="mono">estudiantes</span> (10 filas, dos comisiones).<br><strong>1)</strong> Listá <span class="mono">nombre</span> y <span class="mono">nota</span> de la comisión <strong>\'4B\'</strong> con <strong>nota &gt;= 6</strong>, ordenados por nota <strong>descendente</strong>.<br><strong>2)</strong> <strong>Insertá</strong> un estudiante nuevo (nombre, comisión y nota).<br><strong>3)</strong> Los de <strong>\'5B\'</strong> con <strong>nota &gt;= 7</strong> quedan regulares: poné su <span class="mono">regular</span> en <strong>1</strong> (una sola sentencia UPDATE con AND).<br><strong>4)</strong> Mostrá <strong>cuántos estudiantes hay por comisión</strong> (GROUP BY + COUNT).',
-  editor:'-- Último nivel. Todo lo que aprendiste sirve acá.\n',
-  objectives:[
-    { id:'o1',
-      text:'4B con nota >= 6: nombre y nota, ordenados por nota DESC.',
-      check:function(){
-        var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='estudiantes' && !!h.stmt.where && !!h.stmt.orderBy; });
-        return arr.some(function(h){
-          var w=h.stmt.where;
-          if(!logicHas(w,'and')){ return false; }
-          if(collectCols(w).indexOf('comision')<0){ return false; }
-          var c=findCmp(w,'nota');
-          var okNota=c.some(function(x){ return (x.op==='>=' && x.val>=6) || (x.op==='>' && x.val>=5.9); });
-          if(!okNota){ return false; }
-          var ob=h.stmt.orderBy[0];
-          if(!(ob.col==='nota' && ob.dir==='desc')){ return false; }
-          return setEq(valSet(h,'nombre'),['Valentina Gómez','Mateo Fernández','Franco Molina']);
-        });
-      }
-    },
-    { id:'o2',
-      text:'Insertá un estudiante nuevo.',
-      check:function(){
-        var db=state.db;
-        var hasIns=okHist().some(function(h){ return h.stmt.type==='insert' && h.stmt.table==='estudiantes'; });
-        return !!(db.estudiantes && db.estudiantes.rows.length>10 && hasIns);
-      }
-    },
-    { id:'o3',
-      text:'Regularizá a los 5B con nota >= 7 (UPDATE con AND).',
-      check:function(){
-        var db=state.db;
-        if(!db.estudiantes){ return false; }
-        var target=db.estudiantes.rows.filter(function(r){ return r.comision==='5B' && toNum(r.nota)>=7; });
-        if(target.length===0){ return false; }
-        var allReg=target.every(function(r){ return r.regular===1; });
-        if(!allReg){ return false; }
-        return okHist().some(function(h){
-          if(h.stmt.type!=='update' || h.stmt.table!=='estudiantes' || !h.stmt.where){ return false; }
-          if(!logicHas(h.stmt.where,'and')){ return false; }
-          var setReg=false;
-          h.stmt.sets.forEach(function(s){ if(s[0]==='regular'){ setReg=true; } });
-          return setReg;
-        });
-      }
-    },
-    { id:'o4',
-      text:'Cuántos estudiantes hay por comisión (GROUP BY + COUNT).',
-      check:function(){
-        var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='estudiantes' && !!h.stmt.groupBy; });
-        return arr.some(function(h){
-          if(h.stmt.groupBy.indexOf('comision')<0){ return false; }
-          var hasCount=h.stmt.items.some(function(it){ return it.agg && it.agg.fn==='COUNT'; });
-          return hasCount && h.result.rows.length>=3;
-        });
-      }
-    }
-  ],
-  bonusText:'Orden doble: mostrá los estudiantes ordenados por comisión ascendente y, dentro de cada comisión, por nota descendente.',
-  bonusCheck:function(){
-    var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='estudiantes' && !!h.stmt.orderBy; });
-    return arr.some(function(h){
-      var ob=h.stmt.orderBy;
-      return ob.length>=2 && ob[0].col==='comision' && ob[1].col==='nota' && ob[1].dir==='desc';
-    });
-  },
-  hint:"Cuatro sentencias independientes: un SELECT con WHERE ... AND ... ORDER BY nota DESC; un INSERT; un UPDATE con SET regular = 1 WHERE comision = '5B' AND nota >= 7; un SELECT con COUNT(*) GROUP BY comision.",
-  solution:"SELECT nombre, nota FROM estudiantes\nWHERE comision = '4B' AND nota >= 6\nORDER BY nota DESC;\n\nINSERT INTO estudiantes (nombre, comision, nota)\nVALUES ('Nuevo Ingreso', '4B', 7.0);\n\nUPDATE estudiantes SET regular = 1\nWHERE comision = '5B' AND nota >= 7;\n\nSELECT comision, COUNT(*) AS cantidad\nFROM estudiantes\nGROUP BY comision;"
-}
-];
-
-/* ---------- datos semilla por nivel ---------- */
-function levelWorld(L){
-  var db={};
-  var worlds={
-    1:{ alumnos:{cols:[['id','INTEGER',true],['nombre','TEXT'],['apellido','TEXT'],['comision','TEXT']],
-        rows:[[1,'Valentina','Gómez','4B'],[2,'Mateo','Fernández','4B'],[3,'Lucía','Sáez','4A'],[4,'Tomás','Villanueva','4B'],[5,'Julieta','Ríos','4C'],[6,'Benjamín','Ocampo','4A']]} },
-    2:{ productos:{cols:[['id','INTEGER',true],['producto','TEXT'],['precio','INTEGER'],['stock','INTEGER']],
-        rows:[[1,'Lapicera azul',350,120],[2,'Cuaderno 48 hojas',1200,45],[3,'Regla 30 cm',800,60],[4,'Mochila escolar',18500,12],[5,'Calculadora científica',24000,8],[6,'Block de hojas',2100,30],[7,'Cartuchera',4300,25],[8,'Marcador negro',600,90]]} },
-    3:{ peliculas:{cols:[['id','INTEGER',true],['titulo','TEXT'],['anio','INTEGER'],['genero','TEXT'],['calificacion','REAL']],
-        rows:[[1,'Rápidos y Furiosos X',2023,'Acción',6.5],[2,'Oppenheimer',2023,'Drama',8.4],[3,'Barbie',2023,'Comedia',7.0],[4,'Intensa Mente 2',2024,'Animación',8.1],[5,'Duna: Parte Dos',2024,'Ciencia ficción',8.6],[6,'Titanic',1997,'Romance',7.9],[7,'El Padrino',1972,'Drama',9.2],[8,'Coco',2017,'Animación',8.4],[9,'Matrix',1999,'Ciencia ficción',8.7],[10,'Cars 3',2017,'Animación',6.8]]} },
-    4:{ empleados:{cols:[['id','INTEGER',true],['nombre','TEXT'],['area','TEXT'],['salario','INTEGER'],['edad','INTEGER']],
-        rows:[[1,'Carla Duarte','Sistemas',520000,29],[2,'Nicolás Paz','Sistemas',610000,35],[3,'Rosa Mendoza','Contabilidad',480000,41],[4,'Julián Arias','Contabilidad',395000,27],[5,'Elena Cruz','Administración',380000,45],[6,'Marcos Lima','Sistemas',470000,24],[7,'Paula Soto','Redes',505000,31],[8,'Diego Vera','Administración',410000,52],[9,'Ana Ruiz','Contabilidad',540000,26]]} },
-    5:{ socios:{cols:[['id','INTEGER',true],['nombre','TEXT'],['dni','INTEGER'],['localidad','TEXT']],
-        rows:[[1,'Marta Ibarra',30123456,'Neuquén'],[2,'Lucas Ortega',35444777,'Centenario'],[3,'Rocío Álvarez',41022334,'Neuquén'],[4,'Hernán Sosa',28777666,'Plottier'],[5,'Agustina Vega',44999001,'Cipolletti']]} },
-    6:{ inventario:{cols:[['id','INTEGER',true],['equipo','TEXT'],['estado','TEXT'],['precio','INTEGER']],
-        rows:[[1,'PC Escritorio 1','operativo',320000],[2,'Notebook 3','operativo',350000],[3,'Impresora vieja','fuera de servicio',45000],[4,'Proyector Aula 12','operativo',180000],[5,'Switch de red','operativo',89000],[6,'Monitor 24 pulgadas','operativo',130000]]} },
-    7:{},
-    8:{ borrador:{cols:[['id','INTEGER',true],['contenido','TEXT']],
-        rows:[[1,'prueba_01'],[2,'prueba_02'],[3,'borrador_informe'],[4,'tmp_1234'],[5,'viejo_backup']]},
-       archivos:{cols:[['id','INTEGER',true],['nombre','TEXT'],['tam_kb','INTEGER']],
-        rows:[[1,'acta_septiembre.pdf',240],[2,'listado_4b.csv',18],[3,'logo_cpem17.png',96],[4,'planilla_notas.ods',57]]} },
-    9:{ ventas:{cols:[['id','INTEGER',true],['vendedor','TEXT'],['producto','TEXT'],['monto','INTEGER']],
-        rows:[[1,'Sofía','Cuadernos x100',98000],[2,'Luis','Lapiceras x50',75000],[3,'Marta','Mochilas',68000],[4,'Sofía','Marcadores x30',87000],[5,'Diego','Carpetas',52000],[6,'Luis','Blocks de hojas',62000],[7,'Marta','Cartucheras',74000],[8,'Sofía','Calculadoras',125000],[9,'Diego','Reglas',47000],[10,'Luis','Mochilas',108000],[11,'Marta','Lapiceras x50',56000],[12,'Diego','Blocks',43000]]} },
-    10:{ estudiantes:{cols:[['id','INTEGER',true],['nombre','TEXT'],['comision','TEXT'],['nota','REAL'],['regular','INTEGER']],
-        rows:[[1,'Valentina Gómez','4B',8.5,1],[2,'Mateo Fernández','4B',6.0,1],[3,'Lucía Sáez','4A',9.0,1],[4,'Tomás Villanueva','4B',4.5,0],[5,'Julieta Ríos','5B',7.0,0],[6,'Benjamín Ocampo','4A',5.5,0],[7,'Camila Torres','5B',8.0,0],[8,'Franco Molina','4B',7.5,1],[9,'Delfina Castro','5B',6.5,0],[10,'Ignacio Peña','4A',3.0,0]]} }
-  };
-  var w=worlds[L.n]||{};
-  Object.keys(w).forEach(function(name){
-    var t=w[name];
-    db[name]={
-      name:name,
-      columns:t.cols.map(function(c){ return {name:c[0],type:c[1],pk:!!c[2],notNull:false,unique:false,autoInc:false,def:undefined}; }),
-      rows:t.rows.map(function(r){
-        var o={};
-        t.cols.forEach(function(c,ix){ o[c[0]]=r[ix]; });
-        return o;
-      })
-    };
-  });
-  return db;
-}
-
-/* ==================================================================
-   ESTADO GLOBAL — con memoria POR NIVEL
-================================================================== */
-var state={
-  view:'manual', level:1, db:null, lv:null,
-  worlds:{}, levelResults:{}, levelHist:{}, levelFlags:{}, levelEditor:{}, levelSeen:{}
-};
-
-function ensureWorld(n){
-  if(!state.worlds[n]){ state.worlds[n]=levelWorld(LEVELS[n-1]); }
-  state.db=state.worlds[n];
-  if(!state.levelHist[n]){ state.levelHist[n]=[]; }
-  if(!state.levelFlags[n]){ state.levelFlags[n]={hadError:false}; }
-  if(!state.levelSeen[n]){
-    state.levelSeen[n]={};
-    Object.keys(state.db).forEach(function(k){ state.levelSeen[n][k]=1; });
-  }
-  state.lv={
-    hist: state.levelHist[n],
-    hadError: state.levelFlags[n].hadError,
-    tablesSeen: state.levelSeen[n]
-  };
-}
-
-function restoreWorld(n){
-  state.worlds[n]=levelWorld(LEVELS[n-1]);
-  state.db=state.worlds[n];
-  state.levelHist[n]=[];
-  state.levelFlags[n]={hadError:false};
-  state.levelSeen[n]={};
-  Object.keys(state.db).forEach(function(k){ state.levelSeen[n][k]=1; });
-  state.lv={ hist: state.levelHist[n], hadError:false, tablesSeen: state.levelSeen[n] };
-  delete state.levelResults[n];
-}
-
-/* ==================================================================
-   UI — toasts, modales, confetti
-================================================================== */
-function toast(msg,kind){
-  var el=document.createElement('div');
-  el.className='toast'+(kind ? ' '+kind : '');
-  var ico=(kind==='amber') ? 'star' : 'check-circle-2';
-  el.innerHTML='<i data-lucide="'+ico+'"></i><span>'+msg+'</span>';
-  $('#toasts').appendChild(el);
-  icons();
-  setTimeout(function(){
-    el.style.transition='opacity .3s, transform .3s';
-    el.style.opacity='0';
-    el.style.transform='translateY(8px)';
-    setTimeout(function(){ if(el.parentNode){ el.parentNode.removeChild(el); } },320);
-  },3600);
-}
-function openModal(html,opts){
-  opts=opts||{};
-  var root=$('#modalRoot');
-  root.className='modal-root open';
-  root.innerHTML='<div class="modal-backdrop"></div><div class="modal-card">'+html+'</div>';
-  if(opts.dismiss!==false){
-    root.querySelector('.modal-backdrop').addEventListener('click',closeModal);
-  }
-  return root;
-}
-function closeModal(){
-  var r=$('#modalRoot');
-  r.className='modal-root';
-  r.innerHTML='';
-}
-function confetti(){
-  var colors=['#136A47','#B36A1D','#1C1A14','#C9A227','#7A9E7E'];
-  var wrap=document.createElement('div');
-  wrap.className='confetti';
-  for(var i=0;i<36;i++){
-    var p=document.createElement('i');
-    p.style.left=(Math.random()*100)+'vw';
-    p.style.background=colors[Math.floor(Math.random()*colors.length)];
-    p.style.width=(4+Math.random()*5)+'px';
-    p.style.height=(9+Math.random()*9)+'px';
-    p.style.setProperty('--r',(Math.random()*720-360)+'deg');
-    p.style.animationDelay=(Math.random()*0.4)+'s';
-    p.style.animationDuration=(1+Math.random()*0.9)+'s';
-    wrap.appendChild(p);
-  }
-  document.body.appendChild(wrap);
-  setTimeout(function(){ wrap.remove(); },2400);
-}
-
-/* ==================================================================
-   RENDER de tablas
-================================================================== */
-function tableHTML(cols,rows,anim){
-  var numCol=cols.map(function(col,ix){
-    return rows.length>0 && rows.every(function(r){ return r[ix]===null || typeof r[ix]==='number'; });
-  });
-  var h='<div class="tbl-wrap"><table class="rtable"><thead><tr><th class="rownum">#</th>';
-  cols.forEach(function(c,i){
-    h+='<th'+(numCol[i]?' class="num"':'')+'>'+esc(c)+'</th>';
-  });
-  h+='</tr></thead><tbody>';
-  rows.forEach(function(r,ix){
-    h+='<tr'+(anim ? (' class="anim" style="--d:'+Math.min(ix*38,420)+'ms"') : '')+'><td class="rownum">'+(ix+1)+'</td>';
-    r.forEach(function(v,i){
-      if(v===null || v===undefined){ h+='<td class="null">NULL</td>'; }
-      else{ h+='<td'+(numCol[i]?' class="num"':'')+'>'+esc(String(v))+'</td>'; }
-    });
-    h+='</tr>';
-  });
-  if(rows.length===0){
-    h+='<tr><td class="rownum">·</td><td class="null" colspan="'+cols.length+'">— sin filas —</td></tr>';
-  }
-  h+='</tbody></table></div>';
-  return h;
-}
-
-/* ==================================================================
-   NAVEGACIÓN Y HUD
-================================================================== */
-function buildNav(){
-  var nav=$('#nav');
-  var html='<div class="nav-sec">Estudiar</div>';
-  html+='<a class="nav-item" data-view="manual"><span class="nav-num"><i data-lucide="book-open"></i></span><span class="nav-title">Manual teórico</span><span class="nav-state"></span></a>';
-  html+='<div class="nav-sec">Práctica · 10 niveles</div>';
-  LEVELS.forEach(function(L){
-    html+='<a class="nav-item" data-level="'+L.n+'">'
-      +'<span class="nav-num">'+pad2(L.n)+'</span>'
-      +'<span class="nav-title">'+esc(L.title)+'</span>'
-      +'<span class="nav-state"></span></a>';
-  });
-  nav.innerHTML=html;
-  Array.prototype.forEach.call(nav.querySelectorAll('.nav-item'),function(el){
-    el.addEventListener('click',function(){
-      if(el.getAttribute('data-view')){ go('manual'); return; }
-      var n=parseInt(el.getAttribute('data-level'),10);
-      if(n>store.data.unlocked){ toast('Completá el nivel anterior para desbloquear este.','amber'); return; }
-      go('level',n);
-    });
-  });
-}
-function updateNav(){
-  Array.prototype.forEach.call(document.querySelectorAll('.nav-item'),function(el){
-    el.classList.remove('active','done','locked');
-    var st=el.querySelector('.nav-state');
-    if(st){ st.innerHTML=''; }
-    if(el.getAttribute('data-view')==='manual'){
-      if(state.view==='manual'){ el.classList.add('active'); }
-      return;
-    }
-    var n=parseInt(el.getAttribute('data-level'),10);
-    if(n>store.data.unlocked){
-      el.classList.add('locked');
-      if(st){ st.innerHTML='<i data-lucide="lock"></i>'; }
-    } else if(store.isDone(n)){
-      el.classList.add('done');
-      if(st){ st.innerHTML='<i data-lucide="check"></i>'; }
-    }
-    if(state.view==='level' && state.level===n){ el.classList.add('active'); }
-  });
-  icons();
-}
-function updateHUD(){
-  $('#rankName').textContent=rankName(store.data.xp);
-  $('#rankXp').textContent=store.data.xp+' XP';
-  var track=$('#xpTrack');
-  track.innerHTML='';
-  for(var i=1;i<=10;i++){
-    (function(idx){
-      var s=document.createElement('span');
-      s.className='xp-seg'+(store.isDone(idx)?' full':'');
-      s.title='Nivel '+idx+': '+(store.isDone(idx)?'completado':(idx<=store.data.unlocked?'disponible':'bloqueado'));
-      s.addEventListener('click',function(){
-        if(idx<=store.data.unlocked){ go('level',idx); }
-        else{ toast('Ese nivel todavía está bloqueado.','amber'); }
-      });
-      track.appendChild(s);
-    })(i);
-  }
-}
-
-function go(view,n){
-  state.view=view;
-  if(view==='level'){
-    state.level=n;
-    ensureWorld(n);
-    renderLevel();
-  } else {
-    $('#viewManual').classList.remove('hidden');
-    $('#viewLevel').classList.add('hidden');
-  }
-  updateNav();
-  window.scrollTo(0,0);
-}
-
-/* ==================================================================
-   PANEL DE RESULTADOS — con memoria por nivel
-================================================================== */
-function defaultResultsHTML(){
-  return '<div class="empty-state"><i data-lucide="corner-down-right"></i><span>Todavía no ejecutaste nada en este nivel. Escribí una consulta y pulsá <strong>Ejecutar</strong> — el resultado aparece siempre como tabla.</span></div>';
-}
-function showResultsFor(n){
-  var b=$('#resultsBody');
-  if(!b){ return; }
-  b.innerHTML=(state.levelResults[n]!==undefined) ? state.levelResults[n] : defaultResultsHTML();
-}
-function setResults(html){
-  state.levelResults[state.level]=html;
-  var b=$('#resultsBody');
-  if(b){ b.innerHTML=html; }
-}
-
-/* ==================================================================
-   VISTA DE NIVEL
-================================================================== */
-function renderLevel(){
-  var L=LEVELS[state.level-1], n=L.n;
-  var done=store.isDone(n);
-  var objs=store.objs(n);
-  var bonus=store.bonus(n);
-
-  $('#lvNum').textContent=pad2(n);
-  $('#lvKicker').textContent=L.cat+' · Nivel '+n+' de 10';
-  $('#lvTitle').textContent=L.title;
-  if(done){ $('#lvDoneBadge').classList.remove('hidden'); } else { $('#lvDoneBadge').classList.add('hidden'); }
-
-  $('#lvTheory').innerHTML=L.theory;
-  $('#lvSyntax').textContent=L.syntax;
-  var sn=$('#lvSyntaxNote');
-  sn.textContent=L.syntaxNote||'';
-  if(L.syntaxNote){ sn.classList.remove('hidden'); } else { sn.classList.add('hidden'); }
-
-  $('#lvBrief').innerHTML=L.brief;
-
-  var ol=$('#objList');
-  ol.innerHTML='';
-  L.objectives.forEach(function(o){
-    var li=document.createElement('li');
-    li.id='obj-'+o.id;
-    if(objs[o.id]){ li.className='done'; }
-    li.innerHTML='<span class="obj-box"><i data-lucide="check"></i></span><span>'+o.text+'</span>';
-    ol.appendChild(li);
-  });
-
-  $('#bonusText').textContent=L.bonusText;
-  if(bonus){ $('#bonusRow').classList.add('done'); } else { $('#bonusRow').classList.remove('done'); }
-
-  $('#hintBox').innerHTML='<strong>Pista:</strong> '+esc(L.hint);
-  $('#solCode').textContent=L.solution;
-  $('#hintBox').classList.add('hidden');
-  $('#solBox').classList.add('hidden');
-
-  var savedEd=state.levelEditor[n];
-  $('#ed').value=(savedEd===undefined || savedEd===null) ? (L.editor||'') : savedEd;
-  fitEditor();
-
-  showResultsFor(n);
-
-  $('#viewLevel').classList.remove('hidden');
-  $('#viewManual').classList.add('hidden');
-
-  renderLive();
-  icons();
-  $('#ed').focus();
-}
-
-function colTags(c){
-  var t='';
-  if(c.pk){ t+=' <span class="pk" title="clave primaria">PK</span>'; }
-  if(c.autoInc){ t+=' <span class="pk" title="autoincremental: el id se genera solo">AI</span>'; }
-  if(c.notNull){ t+=' <span class="pk" title="NOT NULL: obligatoria">NN</span>'; }
-  if(c.unique){ t+=' <span class="pk" title="UNIQUE: sin valores repetidos">UQ</span>'; }
-  if(c.def!==undefined){ t+=' <span class="pk" title="valor por defecto">DEF</span>'; }
-  return t;
-}
-
-function renderLive(){
-  var body=$('#liveBody');
-  if(!body || !state.lv){ return; }
-  var L=LEVELS[state.level-1];
-  var db=state.db;
-  var world=levelWorld(L);
-  var order=[], seen={};
-  Object.keys(world).forEach(function(k){ if(db[k]){ order.push(k); seen[k]=1; } });
-  Object.keys(db).forEach(function(k){ if(!seen[k]){ order.push(k); seen[k]=1; } });
-  var gone=[];
-  Object.keys(state.lv.tablesSeen).forEach(function(k){ if(!db[k]){ gone.push(k); } });
-
-  var html='';
-  order.forEach(function(name){
-    var tb=db[name];
-    var schema=tb.columns.map(function(c){
-      return c.name+' '+c.type+colTags(c);
-    }).join('<span class="tsep">·</span>');
-    var colNames=tb.columns.map(function(c){ return c.name; });
-    var data=tb.rows.map(function(r){
-      return colNames.map(function(c){ return nv(r[c]); });
-    });
-    html+='<div class="live-tb">'
-      +'<div class="lt-head"><span class="lt-name"><i data-lucide="table-2"></i>'+esc(tb.name)+'</span>'
-      +'<span class="lt-count">'+tb.rows.length+' '+(tb.rows.length===1?'fila':'filas')+'</span></div>'
-      +'<div class="lt-schema">'+schema+'</div>'
-      +tableHTML(colNames,data,false)
-      +'</div>';
-  });
-  gone.forEach(function(name){
-    html+='<div class="live-tb gone">'
-      +'<div class="lt-head"><span class="lt-name"><i data-lucide="trash-2"></i>'+esc(name)+'</span><span class="lt-count">eliminada</span></div>'
-      +'<div class="gone-note"><i data-lucide="alert-triangle"></i> Esta tabla ya no existe: se ejecutó DROP TABLE. El botón «Restaurar datos» la recupera.</div>'
-      +'</div>';
-  });
-  if(html===''){
-    html='<div class="empty-state"><i data-lucide="database"></i><span>La base está vacía: todavía no creaste ninguna tabla con CREATE TABLE.</span></div>';
-  }
-  body.innerHTML=html;
-  icons();
-}
-
-/* ==================================================================
-   EDITOR — una sola capa, auto-creciente, con memoria por nivel
-================================================================== */
-function fitEditor(){
-  var ed=$('#ed');
-  if(!ed){ return; }
-  ed.style.height='auto';
-  var h=ed.scrollHeight;
-  if(h<150){ h=150; }
-  if(h>340){ h=340; }
-  ed.style.height=h+'px';
-}
-
-function rememberEditor(){
-  var ed=$('#ed');
-  if(ed && state.level){ state.levelEditor[state.level]=ed.value; }
-}
-
-function insertAtCaret(txt,back){
-  var ed=$('#ed');
-  var s, e;
-  if(document.activeElement===ed){
-    s=ed.selectionStart; e=ed.selectionEnd;
-  } else {
-    s=ed.value.length; e=ed.value.length;
-    ed.focus();
-  }
-  ed.value=ed.value.slice(0,s)+txt+ed.value.slice(e);
-  var np=s+txt.length-(back||0);
-  ed.focus();
-  try{ ed.setSelectionRange(np,np); }catch(err){}
-  rememberEditor();
-  fitEditor();
-}
-
-var running=false;
-function doRun(){
-  if(running){ return; }
-  var ed=$('#ed'), body=$('#resultsBody');
-  if(!ed || !body){ return; }
-  var sql=ed.value;
-  if(sql.trim()===''){
-    body.innerHTML='<div class="empty-state"><i data-lucide="corner-down-right"></i><span>El editor está vacío: escribí una consulta.</span></div>';
-    icons();
-    return;
-  }
-  running=true;
-  body.innerHTML='<div class="thinking">&gt; ejecutando<span class="cursor"></span></div>';
-  setTimeout(function(){
-    try{
-      Object.keys(state.db).forEach(function(k){ state.lv.tablesSeen[k]=1; });
-      var outs=runSQL(state.db,sql);
-      var hadErr=false;
-      outs.forEach(function(o){
-        if(o.status==='ok' || o.status==='warn'){ state.lv.hist.push(o); }
-        else{ hadErr=true; }
-      });
-      if(hadErr){
-        state.lv.hadError=true;
-        state.levelFlags[state.level].hadError=true;
-      }
-      Object.keys(state.db).forEach(function(k){ state.lv.tablesSeen[k]=1; });
-
-      var html='';
-      outs.forEach(function(o){
-        html+='<div class="run-item">'
-          +'<div class="run-line">'
-          +'<span class="rb '+o.status+'">'+(o.status==='ok'?'OK':(o.status==='warn'?'OJO':'ERR'))+'</span>'
-          +'<code class="run-sql">'+esc(o.sql)+'</code>';
-        if(o.status!=='err'){
-          html+='<span class="run-msg">'+esc(o.message)
-            +(o.result ? (' · '+o.result.rows.length+' '+(o.result.rows.length===1?'fila':'filas')+' · '+fmtMs(o.ms)) : '')
-            +'</span>';
-        }
-        html+='</div>';
-        if(o.status==='err'){
-          html+='<div class="err-msg"><i data-lucide="alert-triangle"></i><span>'+esc(o.message)+'</span></div>';
-        } else if(o.result){
-          html+=tableHTML(o.result.columns,o.result.rows,true);
-        }
-        html+='</div>';
-      });
-      setResults(html);
-      renderLive();
-      evaluateObjectives();
-      icons();
-    }catch(err){
-      console.error(err);
-      setResults('<div class="err-msg"><i data-lucide="alert-triangle"></i><span>Error inesperado: '+esc(err.message)+'</span></div>');
-      icons();
-    }finally{
-      running=false;
-    }
-  },300);
-}
-
-/* ==================================================================
-   OBJETIVOS Y NIVEL COMPLETO
-================================================================== */
-function evaluateObjectives(){
-  var L=LEVELS[state.level-1], n=L.n;
-  var newly=0;
-  L.objectives.forEach(function(o){
-    if(store.objs(n)[o.id]){ return; }
-    var ok=false;
-    try{ ok=!!o.check(); }catch(e){ ok=false; }
-    if(ok){
-      store.grantObj(n,o.id);
-      var li=$('#obj-'+o.id);
-      if(li){ li.classList.add('done'); }
-      newly++;
-    }
-  });
-  if(!store.bonus(n)){
-    var okB=false;
-    try{ okB=!!L.bonusCheck(); }catch(e){ okB=false; }
-    if(okB && store.grantBonus(n)){
-      $('#bonusRow').classList.add('done');
-      toast('Reto extra superado: +20 XP');
-      updateHUD();
-      updateNav();
-    }
-  }
-  var allDone=L.objectives.every(function(o){ return !!store.objs(n)[o.id]; });
-  if(newly>0 && allDone && !store.isDone(n)){
-    completeLevel(n);
-  }
-}
-
-function completeLevel(n){
-  store.complete(n,100);
-  updateHUD();
-  updateNav();
-  var L=LEVELS[n-1];
-  var isLast=(n===10);
-  confetti();
-  var btns;
-  if(isLast){
-    btns='<button class="btn primary" id="stampNext"><i data-lucide="trophy"></i> Ver mi certificado</button>';
-  } else {
-    btns='<button class="btn" id="stampStay">Quedarme acá</button>'
-      +'<button class="btn primary" id="stampNext"><i data-lucide="arrow-right"></i> Nivel '+(n+1)+': '+esc(LEVELS[n].title)+'</button>';
-  }
-  openModal(
-    '<div class="stamp-card">'
-    +'<div class="k">SQLAB · CPEM N°17 · 4.º B</div>'
-    +'<h3>¡Nivel '+n+' superado!</h3>'
-    +'<div class="sub">'+esc(L.title)+'</div>'
-    +'<div class="xp">+100 XP · '+store.data.xp+' XP totales</div>'
-    +'<div class="stamp-actions">'+btns+'</div>'
-    +'</div>',
-    {dismiss:false}
-  );
-  $('#stampNext').addEventListener('click',function(){
-    closeModal();
-    if(isLast){ showCertificate(); } else { go('level',n+1); }
-  });
-  var stay=$('#stampStay');
-  if(stay){ stay.addEventListener('click',closeModal); }
-  icons();
-}
-
-function showCertificate(){
-  var fecha=new Date().toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'});
-  openModal(
-    '<div class="cert">'
-    +'<div class="k">SQLAB · LABORATORIO DE BASES DE DATOS</div>'
-    +'<h2>Certificado de finalización</h2>'
-    +'<div class="of">Se deja constancia de que</div>'
-    +'<input class="name-input" id="certName" value="Estudiante de 4.º B" spellcheck="false">'
-    +'<p class="body-txt">completó los <strong>10 niveles</strong> del laboratorio de autoaprendizaje de bases de datos: teoría de BD, DDL, DML y DCL, SELECT con filtros y operadores lógicos, INSERT, UPDATE, DELETE, CREATE, TRUNCATE, DROP, agrupación y ordenamiento.</p>'
-    +'<div class="seal">SQL·LAB<br>4B<br>CPEM 17</div>'
-    +'<div class="foot">'
-    +'<div><div class="line">Fecha de emisión</div>'+esc(fecha)+'</div>'
-    +'<div style="text-align:center"><div class="line">Rango alcanzado</div>'+esc(rankName(store.data.xp))+' · '+store.data.xp+' XP</div>'
-    +'<div style="text-align:right"><div class="line">Cátedra</div>Bases de Datos · CPEM N°17</div>'
-    +'</div>'
-    +'<div class="stamp-actions cert-actions" style="margin-top:22px">'
-    +'<button class="btn ghost" id="certClose">Cerrar</button>'
-    +'<button class="btn primary" id="certPrint"><i data-lucide="printer"></i> Imprimir</button>'
-    +'</div>'
-    +'</div>'
-  );
-  $('#certClose').addEventListener('click',closeModal);
-  $('#certPrint').addEventListener('click',function(){
-    document.body.classList.add('print-cert');
-    window.print();
-    setTimeout(function(){ document.body.classList.remove('print-cert'); },400);
-  });
-  icons();
-}
-
-/* ==================================================================
-   MANUAL — tabla demo + chips de camino
-================================================================== */
-function buildManual(){
-  var cols=['id','nombre','apellido','comision'];
-  var rows=[
-    [1,'Valentina','Gómez','4B'],[2,'Mateo','Fernández','4B'],[3,'Lucía','Sáez','4A'],
-    [4,'Tomás','Villanueva','4B'],[5,'Julieta','Ríos','4C']
-  ];
-  var h='<table class="rtable"><thead><tr>';
-  cols.forEach(function(c,i){
-    h+='<th'+(i===0?'':' style="background:#7A5A22"')+'>'+c+'</th>';
-  });
-  h+='</tr></thead><tbody>';
-  rows.forEach(function(r){
-    h+='<tr'+(r[0]===1?' style="background:var(--green-soft)"':'')+'>'+r.map(function(v){
-      return '<td>'+v+'</td>';
-    }).join('')+'</tr>';
-  });
-  h+='</tbody></table>';
-  $('#demoTable').innerHTML=h;
-
-  var path=$('#pathChips');
-  path.innerHTML=LEVELS.map(function(L){
-    return '<a data-go="'+L.n+'">'+pad2(L.n)+' · '+esc(L.title)+'</a>';
-  }).join('');
-  Array.prototype.forEach.call(path.querySelectorAll('a'),function(a){
-    a.addEventListener('click',function(){
-      var n=parseInt(a.getAttribute('data-go'),10);
-      if(n>store.data.unlocked){ toast('Ese nivel se desbloquea completando los anteriores.','amber'); return; }
-      go('level',n);
-    });
-  });
-  $('#ctaStart').addEventListener('click',function(){ go('level',1); });
-}
-
-/* ==================================================================
-   AUTOTEST DEL MOTOR
-================================================================== */
-function engineSelfTest(){
-  try{
-    var db={demo:{name:'demo',columns:[{name:'id',type:'INTEGER',pk:true},{name:'nombre',type:'TEXT'}],rows:[{id:1,nombre:'Ana'},{id:2,nombre:'Beto'}]}};
-    function run(s){ return runSQL(db,s); }
-    function ok(cond,label){ if(!cond){ throw new Error(label); } }
-    var r1=run('SELECT nombre FROM demo WHERE id >= 2;');
-    ok(r1[0].status==='ok' && r1[0].result.rows.length===1 && r1[0].result.rows[0][0]==='Beto','SELECT');
-    var r2=run("INSERT INTO demo (nombre) VALUES ('Caro');");
-    ok(r2[0].status==='ok' && db.demo.rows.length===3 && db.demo.rows[2].id===3,'INSERT');
-    var r3=run("UPDATE demo SET nombre = 'Carla' WHERE id = 3;");
-    ok(r3[0].status==='ok' && db.demo.rows[2].nombre==='Carla','UPDATE');
-    var r4=run('SELECT COUNT(*) FROM demo;');
-    ok(r4[0].result && r4[0].result.rows[0][0]===3,'COUNT');
-    run('CREATE TABLE _t (id INTEGER PRIMARY KEY, v TEXT);');
-    run("INSERT INTO _t (v) VALUES ('x');");
-    run('TRUNCATE TABLE _t;');
-    run('DROP TABLE _t;');
-    ok(!db._t,'DROP');
-    run('CREATE TABLE _t2 (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT NOT NULL, edad INTEGER DEFAULT 0);');
-    run("INSERT INTO _t2 (nombre) VALUES ('Ana');");
-    ok(db._t2.rows[0].id===1 && db._t2.rows[0].edad===0,'CONSTRAINTS');
-    run('CREATE TABLE _t3 (id INTEGER, v TEXT, PRIMARY KEY (id));');
-    ok(db._t3 && db._t3.columns[0].pk,'PK-TABLE');
-    run('DROP TABLE _t2;');
-    run('DROP TABLE _t3;');
-    return true;
-  }catch(e){
-    console.error('SQLab autotest falló:',e);
-    return false;
-  }
-}
-
-/* ==================================================================
-   EVENTOS FIJOS + INICIO
-================================================================== */
-function attachStaticEvents(){
-  $('#btnRun').addEventListener('click',function(){ doRun(); });
-  $('#btnHint').addEventListener('click',function(){ $('#hintBox').classList.toggle('hidden'); });
-  $('#btnSol').addEventListener('click',function(){ $('#solBox').classList.toggle('hidden'); });
-  $('#btnReset').addEventListener('click',function(){
-    restoreWorld(state.level);
-    setResults('<div class="empty-state"><i data-lucide="corner-down-right"></i><span>Datos restaurados a su estado inicial. El historial de resultados de este nivel se limpió.</span></div>');
-    renderLive();
-    icons();
-    toast('Datos del nivel restaurados.');
-  });
-
-  var ed=$('#ed');
-  ed.addEventListener('input',function(){
-    fitEditor();
-    rememberEditor();
-  });
-  ed.addEventListener('keydown',function(e){
-    if(e.key==='Tab'){
-      e.preventDefault();
-      var st=ed.selectionStart, en=ed.selectionEnd;
-      ed.value=ed.value.slice(0,st)+'  '+ed.value.slice(en);
-      ed.selectionStart=ed.selectionEnd=st+2;
-      rememberEditor();
-      fitEditor();
-    }
-  });
-
-  $('#edChips').addEventListener('click',function(ev){
-    var t=ev.target;
-    while(t && t!==this && !(t.classList && t.classList.contains('ed-chip'))){
-      t=t.parentNode;
-    }
-    if(!t || t===this){ return; }
-    var txt=t.getAttribute('data-ins')||'';
-    var back=parseInt(t.getAttribute('data-back')||'0',10);
-    insertAtCaret(txt,back);
-  });
-
-  document.addEventListener('keydown',function(e){
-    if((e.ctrlKey || e.metaKey) && e.key==='Enter'){
-      if(state.view==='level' && $('#ed')){
-        e.preventDefault();
-        doRun();
-      }
-    }
-  });
-
-  $('#btnWipe').addEventListener('click',function(){
-    openModal(
-      '<div class="modal-body">'
-      +'<h3>¿Reiniciar todo el progreso?</h3>'
-      +'<p>Se borran los niveles completados, la XP, los retos extra y toda la memoria de resultados y consolas de esta sesión. Los datos de práctica se regeneran solos al entrar a cada nivel.</p>'
-      +'<div class="modal-actions">'
-      +'<button class="btn ghost" id="wipeNo">Cancelar</button>'
-      +'<button class="btn" id="wipeYes" style="background:var(--red);color:#F6F3E8;border-color:#7C2418"><i data-lucide="rotate-ccw"></i> Sí, empezar de cero</button>'
-      +'</div></div>'
-    );
-    $('#wipeNo').addEventListener('click',closeModal);
-    $('#wipeYes').addEventListener('click',function(){
-      store.wipe();
-      closeModal();
-      store.data={unlocked:1,xp:0,lv:{}};
-      state.worlds={};
-      state.levelResults={};
-      state.levelHist={};
-      state.levelFlags={};
-      state.levelEditor={};
-      state.levelSeen={};
-      updateHUD();
-      updateNav();
-      go('manual');
-      toast('Progreso reiniciado. ¡A arrancar de nuevo!');
-    });
-    icons();
-  });
-}
-
-var lastErrToast=0;
-window.addEventListener('error',function(e){
-  var now=Date.now();
-  if(now-lastErrToast<4000){ return; }
-  lastErrToast=now;
-  try{ toast('Error interno: '+((e && e.message)||'desconocido')+' — abrí la consola (F12) para más detalle.','amber'); }catch(_){}
-});
-
-try{
-  store.load();
-  buildNav();
-  buildManual();
-  attachStaticEvents();
-  updateHUD();
-  go('manual');
-  icons();
-  if(!engineSelfTest()){
-    toast('El motor SQL no pasó la prueba interna. Probá recargar la página (F5).','amber');
-  }
-  console.log('%c SQL·LAB v7 — iniciado correctamente ','background:#136A47;color:#F6F3E8;padding:3px 8px;border-radius:4px;font-weight:bold');
-  if(store.data.xp===0 && !store.isDone(1)){
-    setTimeout(function(){ toast('¡Bienvenido/a! Tocá «Nivel 01» en el menú de la izquierda o el botón verde del manual.'); },700);
-  }
-}catch(err){
-  console.error('Error al iniciar SQLab:',err);
-  document.body.insertAdjacentHTML('beforeend','<div style="position:fixed;left:16px;right:16px;bottom:16px;background:#B23A2A;color:#fff;padding:14px 18px;border-radius:10px;font-family:monospace;z-index:999">Error al iniciar: '+esc(err.message)+'</div>');
-}
-</script>
-</body>
-</html>
+  theory:'<p><strong>ORDER BY</strong> ordena el resultado: <span class="mono">ASC</span> ascendente (es el valor por defecto) y <span class="mono">DESC</span> descendente.</p><p><strong>GROUP BY</strong> junta las filas que comparten un mismo valor y permite calcular por grupo con las funciones de agregación: <span class="mono">COUNT</span> cuenta, <span class="mon
