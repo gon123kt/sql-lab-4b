@@ -3,7 +3,2855 @@
 <head> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#F3EFE5"<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#F3EFE5">
+<title>SQLab · Laboratorio de Bases de Datos — CPEM N°17 · 4.º B Informática</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#F3EFE5; --card:#FBF8F1; --ink:#1C1A14; --soft:#6A6353;
+  --hair:rgba(28,26,20,.16); --hair2:rgba(28,26,20,.32);
+  --green:#136A47; --green-deep:#0B4A31; --green-soft:#E2EEE4;
+  --amber:#B36A1D; --amber-soft:#F6E8D3;
+  --red:#B23A2A; --red-soft:#F4DED8;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --sans:'Space Grotesk',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  background-image:radial-gradient(rgba(28,26,20,.075) 1px, transparent 1.3px);
+  background-size:22px 22px;
+  color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--green);color:#F6F3E8}
+button{font-family:var(--sans)}
+h1,h2,h3{line-height:1.15}
+
+header.top{
+  position:sticky;top:0;z-index:50;background:var(--card);
+  border-bottom:1.5px solid var(--ink);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:12px clamp(16px,4vw,36px);
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-mark{
+  width:40px;height:40px;background:var(--green);color:#F6F3E8;border:1.5px solid var(--green-deep);
+  border-radius:9px;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:17px;
+  box-shadow:3px 3px 0 rgba(28,26,20,.9);flex:none;
+}
+.brand h1{font-size:19px;font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.brand h1 em{font-style:normal;color:var(--green)}
+.brand .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--soft);text-transform:uppercase;margin-top:2px;white-space:nowrap}
+.brand .tag-short{display:none}
+.hud{display:flex;align-items:center;gap:14px;margin-left:auto}
+.hud .rank{text-align:right}
+.hud .rank-name{font-weight:700;font-size:13.5px;display:block}
+.hud .rank-xp{font-family:var(--mono);font-size:11px;color:var(--soft)}
+.xp-track{display:flex;gap:4px}
+.xp-seg{width:15px;height:15px;border:1.5px solid var(--ink);border-radius:4px;background:transparent;cursor:pointer;transition:background .2s;flex:none}
+.xp-seg.full{background:var(--green);border-color:var(--green-deep)}
+.xp-seg:hover{background:var(--amber-soft)}
+.xp-seg.full:hover{background:var(--green-deep)}
+.icon-btn{
+  width:36px;height:36px;border:1.5px solid var(--ink);border-radius:9px;background:var(--card);
+  display:grid;place-items:center;cursor:pointer;color:var(--ink);box-shadow:2px 2px 0 rgba(28,26,20,.85);transition:.12s;flex:none;
+}
+.icon-btn:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 rgba(28,26,20,.85)}
+.icon-btn:active{transform:translate(1px,1px);box-shadow:0 0 0}
+.icon-btn svg{width:16px;height:16px}
+
+.shell{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:262px minmax(0,1fr);gap:30px;padding:26px clamp(16px,4vw,36px) 80px;align-items:start}
+aside.nav{position:sticky;top:92px;display:flex;flex-direction:column;gap:3px}
+.nav-sec{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--soft);margin:14px 8px 6px;text-transform:uppercase}
+.nav-sec:first-child{margin-top:0}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;
+  border:1.5px solid transparent;color:var(--ink);text-decoration:none;transition:.12s;user-select:none;
+}
+.nav-item:hover{background:rgba(28,26,20,.05)}
+.nav-item.active{background:var(--card);border-color:var(--ink);box-shadow:3px 3px 0 rgba(28,26,20,.85)}
+.nav-item.locked{opacity:.42;cursor:not-allowed}
+.nav-item.locked:hover{background:transparent}
+.nav-num{
+  font-family:var(--mono);font-size:11px;font-weight:600;width:28px;height:28px;flex:none;
+  border:1.5px solid var(--ink);border-radius:7px;display:grid;place-items:center;background:var(--card);
+}
+.nav-num svg{width:13px;height:13px}
+.nav-item.done .nav-num{background:var(--green);border-color:var(--green-deep);color:#F6F3E8}
+.nav-title{font-size:13.5px;font-weight:500;flex:1;min-width:0}
+.nav-state{width:16px;height:16px;flex:none;color:var(--soft)}
+.nav-state svg{width:15px;height:15px}
+.nav-item.done .nav-state{color:var(--green)}
+.nav-item.active .nav-state{color:var(--amber)}
+
+.card{background:var(--card);border:1.5px solid var(--ink);border-radius:14px;box-shadow:4px 4px 0 rgba(28,26,20,.85)}
+.card-tag{
+  display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+  color:var(--soft);text-transform:uppercase;padding:11px 16px;border-bottom:1.5px dashed var(--hair2);
+}
+.card-tag svg{width:14px;height:14px;color:var(--green)}
+.hidden{display:none!important}
+.mono{font-family:var(--mono)}
+pre.code{
+  font-family:var(--mono);font-size:13px;line-height:1.7;background:#FFFDF6;border:1.5px solid var(--hair2);
+  border-radius:10px;padding:14px 16px;overflow-x:auto;white-space:pre;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px;color:var(--ink);
+  border:1.5px solid var(--ink);border-radius:10px;padding:10px 18px;background:var(--card);cursor:pointer;
+  box-shadow:3px 3px 0 rgba(28,26,20,.9);transition:.12s;text-decoration:none;
+}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(28,26,20,.9)}
+.btn:active{transform:translate(2px,2px);box-shadow:0 0 0}
+.btn.primary{background:var(--green);color:#F6F3E8;border-color:var(--green-deep)}
+.btn.ghost{box-shadow:none;background:transparent;border-color:var(--hair2);font-weight:500}
+.btn.ghost:hover{border-color:var(--ink);transform:none}
+.btn svg{width:15px;height:15px}
+.btn.sm{padding:7px 12px;font-size:12.5px;border-radius:8px}
+
+.manual{display:flex;flex-direction:column;gap:26px}
+.man-hero{padding:34px 34px 30px;position:relative;overflow:hidden}
+.man-hero .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--green-deep);text-transform:uppercase;margin-bottom:10px}
+.man-hero h2{font-size:clamp(28px,4.5vw,42px);font-weight:700;letter-spacing:-.02em;max-width:620px}
+.man-hero h2 span{color:var(--green)}
+.man-hero p{margin-top:14px;max-width:640px;color:#3E3A2E;font-size:15.5px}
+.man-hero .watermark{
+  position:absolute;right:-18px;top:-24px;font-family:var(--mono);font-weight:600;font-size:150px;
+  color:transparent;-webkit-text-stroke:1.5px rgba(28,26,20,.14);pointer-events:none;user-select:none;line-height:1;
+}
+.man-sec{padding:30px 34px}
+.man-num{display:flex;align-items:baseline;gap:16px;margin-bottom:16px}
+.man-num .n{font-family:var(--mono);font-size:34px;font-weight:600;color:var(--green);line-height:1}
+.man-num h3{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.man-body{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:26px;align-items:start}
+.man-body p{margin-bottom:10px;color:#333026}
+.man-body p:last-child{margin-bottom:0}
+.man-body strong{color:var(--ink)}
+.note{
+  border-left:3px solid var(--amber);background:var(--amber-soft);border-radius:0 10px 10px 0;
+  padding:10px 14px;font-size:13.5px;color:#5A3A12;margin-top:14px;
+}
+.note b{font-family:var(--mono);font-size:11px;letter-spacing:.12em;display:block;margin-bottom:3px}
+.demo-wrap{border:1.5px solid var(--ink);border-radius:12px;background:#FFFDF6;overflow:hidden}
+.demo-cap{font-family:var(--mono);font-size:11px;letter-spacing:.1em;padding:8px 12px;border-bottom:1.5px solid var(--hair2);color:var(--soft)}
+.legend{display:flex;flex-direction:column;gap:10px;padding:14px 4px 0}
+.legend-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#3E3A2E}
+.swatch{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--ink);flex:none;margin-top:2px}
+.swatch.row{background:var(--green-soft);border-color:var(--green)}
+.swatch.col{background:var(--amber-soft);border-color:var(--amber)}
+.swatch.cell{background:var(--card);border:1.5px dashed var(--ink)}
+.lang-card{padding:0;overflow:hidden}
+.lang-head{display:grid;grid-template-columns:150px minmax(0,1fr);gap:0;border-bottom:1.5px solid var(--ink)}
+.lang-sigla{
+  display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:34px;letter-spacing:.02em;
+  border-right:1.5px solid var(--ink);background:#FFFDF6;color:var(--green);padding:18px 8px;text-align:center;
+}
+.lang-sigla small{display:block;font-size:9.5px;letter-spacing:.2em;color:var(--soft);margin-top:6px;font-weight:500}
+.lang-title{padding:18px 22px;align-self:center}
+.lang-title h3{font-size:19px;font-weight:700}
+.lang-title .en{font-family:var(--mono);font-size:11.5px;color:var(--soft);margin-top:3px}
+.lang-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;padding:22px}
+.lang-body .txt p{margin-bottom:10px;font-size:14px;color:#333026}
+.path{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.path a{
+  font-family:var(--mono);font-size:11.5px;text-decoration:none;color:var(--ink);border:1.5px solid var(--ink);
+  border-radius:8px;padding:6px 10px;background:var(--card);cursor:pointer;transition:.12s;
+}
+.path a:hover{background:var(--green-soft);border-color:var(--green-deep)}
+.glossary{display:grid;grid-template-columns:1fr 1fr;gap:4px 26px;margin-top:6px}
+.glossary div{display:flex;gap:8px;font-size:13.5px;padding:7px 0;border-bottom:1px dashed var(--hair)}
+.glossary dt{font-family:var(--mono);font-weight:600;color:var(--green-deep);white-space:nowrap}
+.glossary dd{color:#3E3A2E}
+
+.level{display:flex;flex-direction:column;gap:22px}
+.lv-head{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.lv-num{
+  font-family:var(--mono);font-weight:600;font-size:26px;background:var(--ink);color:var(--paper);
+  border-radius:12px;padding:12px 16px;box-shadow:4px 4px 0 rgba(19,106,71,.9);letter-spacing:.02em;
+}
+.lv-head h2{font-size:clamp(22px,3.4vw,32px);font-weight:700;letter-spacing:-.015em}
+.lv-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--soft);text-transform:uppercase;margin-bottom:4px}
+.lv-done-badge{
+  margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:var(--green-soft);color:var(--green-deep);
+  border:1.5px solid var(--green-deep);border-radius:99px;padding:7px 14px;font-weight:600;font-size:13px;
+}
+.lv-done-badge svg{width:15px;height:15px}
+.theory .theory-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px;padding:20px 22px;align-items:start}
+.theory .theory-text{font-size:14.5px;color:#333026}
+.theory .theory-text p+p{margin-top:10px}
+.theory .theory-text strong{color:var(--green-deep)}
+.syntax-box{border:1.5px solid var(--ink);border-radius:12px;overflow:hidden;background:#FFFDF6}
+.syntax-title{font-family:var(--mono);font-size:10px;letter-spacing:.2em;padding:7px 13px;border-bottom:1.5px dashed var(--hair2);color:var(--soft);background:var(--card)}
+.syntax-box pre{font-family:var(--mono);font-size:12.8px;line-height:1.75;padding:13px 15px;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
+.syntax-note{font-family:var(--mono);font-size:11px;color:var(--soft);padding:9px 15px 12px;border-top:1.5px dashed var(--hair2)}
+.lv-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.25fr);gap:22px;align-items:start}
+.lv-left{position:sticky;top:92px;display:flex;flex-direction:column;gap:18px}
+.lv-right{display:flex;flex-direction:column;gap:18px}
+.mission .mission-inner{padding:18px 20px}
+.mission-brief{font-size:14.5px;color:#333026;margin-bottom:16px}
+.objectives{list-style:none;display:flex;flex-direction:column;gap:9px}
+.objectives li{display:flex;gap:11px;align-items:flex-start;font-size:14px;color:#333026;transition:.2s}
+.obj-box{
+  width:21px;height:21px;flex:none;border:1.5px solid var(--ink);border-radius:6px;background:#FFFDF6;
+  display:grid;place-items:center;color:transparent;margin-top:1px;transition:.2s;
+}
+.obj-box svg{width:13px;height:13px;stroke-width:3.2}
+.objectives li.done{color:var(--green-deep)}
+.objectives li.done .obj-box{background:var(--green);border-color:var(--green-deep);color:#F6F3E8;animation:pop .35s cubic-bezier(.2,1.8,.4,1)}
+@keyframes pop{0%{transform:scale(.4)}100%{transform:scale(1)}}
+.bonus-row{
+  display:flex;gap:11px;margin-top:15px;padding:13px 14px;border:1.5px dashed var(--amber);border-radius:11px;
+  background:var(--amber-soft);font-size:13.5px;color:#5A3A12;transition:.2s;
+}
+.bonus-row .obj-box{border-color:var(--amber);color:var(--amber);margin-top:1px}
+.bonus-row.done{border-style:solid}
+.bonus-row.done .obj-box{background:var(--amber);border-color:#7A4811;color:#FDF6EA;animation:pop .35s}
+.bonus-row b{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;display:block;margin-bottom:3px;color:#7A4811}
+.mission-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.reveal{margin-top:14px;border:1.5px solid var(--hair2);border-radius:11px;padding:14px;background:#FFFDF6;animation:fadeUp .25s}
+.reveal .warn-note{font-size:12.5px;color:var(--soft);margin-top:9px;display:flex;gap:7px;align-items:center}
+.reveal .warn-note svg{width:13px;height:13px;flex:none;color:var(--amber)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.editor-card .ed-body{padding:16px}
+.ed-chips{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:11px}
+.ed-chips-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--soft);text-transform:uppercase;margin-right:2px}
+.ed-chip{
+  font-family:var(--mono);font-size:11px;font-weight:600;color:var(--green-deep);
+  background:#FFFDF6;border:1.5px solid var(--hair2);border-radius:7px;
+  padding:3px 8px;cursor:pointer;transition:.12s;line-height:1.4;
+}
+.ed-chip:hover{border-color:var(--green);background:var(--green-soft)}
+.ed-chip:active{transform:translateY(1px)}
+.editor-wrap{
+  border:1.5px solid var(--ink);border-radius:11px;background:#FFFDF6;overflow:hidden;transition:box-shadow .15s;
+}
+.editor-wrap:focus-within{box-shadow:0 0 0 2.5px rgba(19,106,71,.35);border-color:var(--green-deep)}
+.editor-wrap textarea{
+  display:block;width:100%;min-height:150px;max-height:340px;
+  background:transparent;color:var(--ink);caret-color:var(--ink);
+  border:0;outline:0;resize:none;padding:14px 16px;
+  font-family:var(--mono);font-size:13.5px;line-height:1.7;
+  white-space:pre-wrap;overflow-wrap:break-word;word-wrap:break-word;tab-size:4;
+}
+.editor-wrap textarea::placeholder{color:#B4AC97}
+.ed-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:13px;flex-wrap:wrap}
+.ed-hint{font-family:var(--mono);font-size:11px;color:var(--soft)}
+.kbd{border:1.5px solid var(--hair2);border-bottom-width:2.5px;border-radius:6px;padding:1px 6px;background:var(--card);font-family:var(--mono);font-size:10.5px}
+
+.results-body{padding:14px 16px;display:flex;flex-direction:column;gap:14px;min-height:74px}
+.empty-state{display:flex;gap:12px;align-items:center;color:var(--soft);font-size:13.5px;padding:12px 4px}
+.empty-state svg{width:20px;height:20px;flex:none;color:var(--hair2)}
+.run-item{animation:fadeUp .3s}
+.run-line{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11.5px;flex-wrap:wrap;margin-bottom:8px}
+.rb{font-weight:600;letter-spacing:.1em;font-size:10px;padding:3px 8px;border-radius:6px;border:1.5px solid}
+.rb.ok{background:var(--green-soft);color:var(--green-deep);border-color:var(--green-deep)}
+.rb.err{background:var(--red-soft);color:var(--red);border-color:var(--red)}
+.rb.warn{background:var(--amber-soft);color:#7A4811;border-color:var(--amber)}
+.run-sql{color:var(--ink);word-break:break-all}
+.run-msg{color:var(--soft);margin-left:auto}
+.err-msg{
+  font-size:13.5px;color:#7C2418;background:var(--red-soft);border:1.5px solid var(--red);
+  border-radius:10px;padding:11px 14px;display:flex;gap:10px;align-items:flex-start;
+}
+.err-msg svg{width:16px;height:16px;flex:none;margin-top:2px}
+.tbl-wrap{border:1.5px solid var(--ink);border-radius:10px;overflow:auto;background:#FFFDF6;max-height:320px}
+table.rtable{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.3px}
+.rtable th{
+  background:var(--ink);color:var(--paper);text-align:left;padding:7px 11px;font-weight:600;font-size:10.5px;
+  letter-spacing:.09em;text-transform:uppercase;position:sticky;top:0;z-index:2;
+}
+.rtable th.num{text-align:right}
+.rtable th.rownum,.rtable td.rownum{background:transparent;color:var(--soft);font-size:10px;text-align:right;width:34px}
+.rtable td{padding:7px 11px;border-bottom:1px dashed var(--hair);color:#2E2B22}
+.rtable tbody tr:last-child td{border-bottom:none}
+.rtable td.num{text-align:right;font-variant-numeric:tabular-nums}
+.rtable td.null{color:#A59D88;font-style:italic}
+.rtable tbody tr:hover td{background:rgba(19,106,71,.07)}
+.rtable tr.anim{animation:rowIn .3s both;animation-delay:var(--d,0ms)}
+@keyframes rowIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.thinking{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--green-deep);padding:8px 2px}
+.thinking .cursor{display:inline-block;width:8px;height:14px;background:var(--green);animation:blink .7s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+.live-body{padding:14px 16px;display:flex;flex-direction:column;gap:16px}
+.live-tb .lt-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.live-tb .lt-name{font-family:var(--mono);font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:7px}
+.live-tb .lt-name svg{width:14px;height:14px;color:var(--green)}
+.live-tb .lt-count{font-family:var(--mono);font-size:11px;color:var(--soft);margin-left:auto}
+.live-tb .lt-schema{font-family:var(--mono);font-size:11px;color:var(--soft);margin-bottom:9px;word-break:break-word}
+.live-tb .lt-schema .pk{color:var(--amber);font-weight:600}
+.live-tb .lt-schema .tsep{color:var(--hair2);margin:0 6px}
+.live-tb.gone .lt-name{color:var(--red);text-decoration:line-through}
+.live-tb.gone .lt-name svg{color:var(--red)}
+.gone-note{font-size:12.5px;color:var(--soft);display:flex;gap:8px;align-items:center;margin-top:4px}
+.gone-note svg{width:14px;height:14px;flex:none;color:var(--red)}
+
+.modal-root{position:fixed;inset:0;display:none;z-index:80}
+.modal-root.open{display:grid;place-items:center;padding:20px}
+.modal-backdrop{position:absolute;inset:0;background:rgba(28,26,20,.5);animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}}
+.modal-card{
+  position:relative;background:var(--card);border:2px solid var(--ink);border-radius:16px;
+  box-shadow:6px 6px 0 rgba(28,26,20,.85);max-width:520px;width:100%;max-height:90vh;overflow:auto;animation:fadeUp .3s;
+}
+.stamp-card{max-width:480px;text-align:center;padding:38px 34px;background:var(--card);border:3px solid var(--green);box-shadow:0 0 0 3px var(--card),0 0 0 5px var(--green),8px 10px 0 rgba(28,26,20,.4);transform:rotate(-2.5deg);animation:stampIn .55s cubic-bezier(.2,1.5,.35,1)}
+@keyframes stampIn{0%{transform:rotate(-14deg) scale(2);opacity:0}55%{opacity:1}100%{transform:rotate(-2.5deg) scale(1)}}
+.stamp-card .k{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--green-deep)}
+.stamp-card h3{font-size:30px;font-weight:700;margin:8px 0 2px;letter-spacing:-.02em}
+.stamp-card .sub{color:var(--soft);font-size:14px;margin-bottom:16px}
+.stamp-card .xp{font-family:var(--mono);font-weight:600;color:var(--green-deep);background:var(--green-soft);border:1.5px solid var(--green-deep);border-radius:99px;display:inline-block;padding:6px 16px;margin-bottom:20px}
+.stamp-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:95;overflow:hidden}
+.confetti i{position:absolute;top:-26px;border-radius:2px;display:block;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(112vh) rotate(var(--r,360deg))}}
+.toasts{position:fixed;right:18px;bottom:18px;z-index:100;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.toast{
+  background:var(--ink);color:var(--paper);border-radius:11px;padding:12px 16px;font-size:13.5px;
+  display:flex;gap:10px;align-items:center;box-shadow:4px 4px 0 rgba(28,26,20,.25);animation:toastIn .3s;max-width:360px;
+}
+.toast svg{width:16px;height:16px;flex:none;color:#8FD3A8}
+.toast.amber svg{color:#F0B268}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px)}}
+.modal-body{padding:24px}
+.modal-body h3{font-size:19px;margin-bottom:10px}
+.modal-body p{color:#3E3A2E;font-size:14px;margin-bottom:18px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+
+.cert{background:#FFFDF6;border:2px solid var(--ink);outline:2px solid var(--green);outline-offset:5px;border-radius:6px;padding:38px 34px;text-align:center;max-width:560px}
+.cert .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;color:var(--green-deep)}
+.cert h2{font-size:27px;margin:10px 0 4px;letter-spacing:-.02em}
+.cert .of{color:var(--soft);font-size:13.5px}
+.cert .name-input{
+  font-family:var(--sans);font-weight:700;font-size:24px;text-align:center;border:none;border-bottom:2px dashed var(--hair2);
+  background:transparent;outline:none;width:100%;max-width:360px;margin:16px auto 6px;display:block;color:var(--ink);padding:4px;
+}
+.cert .name-input:focus{border-bottom-color:var(--green)}
+.cert .body-txt{font-size:14px;color:#3E3A2E;max-width:420px;margin:8px auto 0}
+.cert .seal{
+  width:96px;height:96px;border:3px solid var(--green);border-radius:50%;margin:22px auto 6px;display:grid;place-items:center;
+  transform:rotate(-10deg);color:var(--green-deep);font-family:var(--mono);font-weight:600;font-size:12px;line-height:1.35;
+  box-shadow:inset 0 0 0 5px #FFFDF6,inset 0 0 0 6.5px var(--green);
+}
+.cert .foot{display:flex;justify-content:space-between;gap:14px;margin-top:24px;font-family:var(--mono);font-size:10.5px;color:var(--soft);text-align:left;flex-wrap:wrap}
+.cert .foot div{flex:1;min-width:130px}
+.cert .foot .line{border-top:1.5px solid var(--hair2);padding-top:6px;margin-top:26px}
+@media print{
+  body.print-cert > *{display:none !important}
+  body.print-cert{background:#fff}
+  body.print-cert #modalRoot{display:block !important;position:static;padding:0}
+  body.print-cert .modal-backdrop{display:none}
+  body.print-cert .modal-card{border:none;box-shadow:none;max-width:none;background:none;overflow:visible}
+  body.print-cert .cert-actions{display:none}
+}
+
+@media (max-width:960px){
+  .shell{grid-template-columns:1fr;gap:20px}
+  aside.nav{position:static;flex-direction:row;overflow-x:auto;padding-bottom:8px;gap:6px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+  aside.nav::-webkit-scrollbar{height:6px}
+  aside.nav::-webkit-scrollbar-thumb{background:var(--hair2);border-radius:3px}
+  .nav-sec{display:none}
+  .nav-item{flex:none;border:1.5px solid var(--hair2)}
+  .nav-item.active{border-color:var(--ink)}
+  .nav-title{white-space:nowrap}
+  .theory .theory-grid,.lv-grid,.man-body,.lang-body{grid-template-columns:1fr}
+  .lang-head{grid-template-columns:110px 1fr}
+  .lang-sigla{font-size:26px}
+  .lv-left{position:static}
+  .hud .rank{display:none}
+  .man-sec{padding:22px 20px}
+  .man-hero{padding:26px 22px}
+  .glossary{grid-template-columns:1fr}
+}
+
+@media (max-width:740px){
+  header.top{flex-wrap:wrap;padding:10px 14px 12px;gap:10px;row-gap:9px}
+  .brand{min-width:0}
+  .brand-mark{width:36px;height:36px;font-size:15px;box-shadow:2px 2px 0 rgba(28,26,20,.9)}
+  .brand h1{font-size:17px}
+  .brand .tag-long{display:none}
+  .brand .tag-short{display:block;margin-top:1px}
+  #btnWipe{order:2;margin-left:0}
+  .hud{order:3;width:100%;gap:10px;margin-left:0}
+  .hud .rank{display:flex;flex-direction:column;flex:1;min-width:0;text-align:left}
+  .hud .rank-name{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hud .rank-xp{font-size:10.5px}
+  .xp-track{gap:3px}
+  .xp-seg{width:12px;height:14px;border-radius:3px}
+  .editor-wrap textarea{font-size:16px}
+  .ed-chip{min-height:30px}
+  .ed-foot .ed-hint{display:none}
+}
+
+@media (max-width:600px){
+  .toasts{left:12px;right:12px;align-items:stretch}
+  .toast{max-width:none}
+  aside.nav{gap:4px}
+  .nav-item{padding:9px 11px}
+  .nav-title{font-size:13px}
+  .results-body{padding:12px 12px}
+  .live-body{padding:12px 12px}
+  .editor-card .ed-body{padding:12px}
+  .mission .mission-inner{padding:15px 15px}
+  .theory .theory-grid{padding:16px 15px;gap:16px}
+  .modal-root.open{padding:12px}
+}
+
+@media (max-width:480px){
+  .lv-head{gap:12px}
+  .lv-num{font-size:20px;padding:9px 12px;border-radius:10px}
+  .man-hero{padding:24px 18px}
+  .man-hero .watermark{font-size:96px;right:-12px;top:-14px}
+  .man-sec{padding:20px 16px}
+  .man-num{gap:12px;margin-bottom:12px}
+  .man-num .n{font-size:28px}
+  .man-num h3{font-size:19px}
+  .lang-head{grid-template-columns:86px 1fr}
+  .lang-sigla{font-size:22px}
+  .lang-body{padding:16px}
+  .lang-title{padding:14px 16px}
+  .stamp-card{padding:30px 20px}
+  .stamp-card h3{font-size:24px}
+  .modal-body{padding:18px}
+  .cert{padding:28px 18px}
+  .cert h2{font-size:22px}
+  .cert .name-input{font-size:19px}
+  .cert .seal{width:82px;height:82px;font-size:11px}
+}
+
+/* ============ FOOTER ============ */
+footer.site-footer{
+  border-top:1.5px solid var(--hair2);
+  padding:28px clamp(16px,4vw,36px) 34px;
+  max-width:1280px;
+  margin:0 auto;
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px 28px;
+  align-items:flex-start;
+  justify-content:space-between;
+  font-size:12.5px;
+  color:var(--soft);
+}
+footer.site-footer .dev-credit{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.02em;
+  line-height:1.6;
+}
+footer.site-footer .dev-credit strong{
+  color:var(--ink);
+  font-weight:600;
+}
+footer.site-footer .license-box{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.04em;
+  line-height:1.7;
+  text-align:right;
+  max-width:460px;
+}
+footer.site-footer .license-box a{
+  color:var(--green-deep);
+  text-decoration:none;
+  border-bottom:1px dotted var(--green);
+}
+footer.site-footer .license-box a:hover{
+  color:var(--green);
+  border-bottom-style:solid;
+}
+footer.site-footer .license-box .cc-line{
+  display:block;
+  margin-bottom:2px;
+}
+footer.site-footer .links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 14px;
+  margin-top:4px;
+  justify-content:flex-end;
+}
+footer.site-footer .links a{
+  color:var(--soft);
+  font-family:var(--mono);
+  font-size:10.5px;
+  text-decoration:none;
+  border:1.5px solid var(--hair2);
+  border-radius:6px;
+  padding:3px 9px;
+  transition:.12s;
+}
+footer.site-footer .links a:hover{
+  border-color:var(--green);
+  color:var(--green-deep);
+  background:var(--green-soft);
+}
+@media (max-width:740px){
+  footer.site-footer{flex-direction:column;align-items:flex-start;text-align:left}
+  footer.site-footer .license-box{text-align:left;max-width:100%}
+  footer.site-footer .links{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <div class="brand-mark">&gt;_</div>
+    <div>
+      <h1>SQL<em>·</em>LAB</h1>
+      <div class="tag tag-long">Bases de datos · 4.º B Informática · CPEM N°17</div>
+      <div class="tag tag-short">CPEM N°17 · 4.º B</div>
+    </div>
+  </div>
+  <div class="hud">
+    <div class="rank">
+      <span class="rank-name" id="rankName">Aprendiz de Datos</span>
+      <span class="rank-xp" id="rankXp">0 XP</span>
+    </div>
+    <div class="xp-track" id="xpTrack" aria-label="Progreso de niveles"></div>
+  </div>
+  <button class="icon-btn" id="btnWipe" title="Reiniciar todo el progreso" aria-label="Reiniciar progreso"><i data-lucide="rotate-ccw"></i></button>
+</header>
+
+<div class="shell">
+  <aside class="nav" id="nav"></aside>
+  <main id="main">
+
+    <section id="viewManual" class="manual">
+      <div class="card man-hero">
+        <div class="watermark">SQL</div>
+        <div class="kicker">Manual del laboratorio</div>
+        <h2>Primero se entiende, <span>después</span> se escribe.</h2>
+        <p>Antes de tipear tu primera consulta conviene saber qué es una base de datos, cómo se organiza y por qué el lenguaje SQL tiene tres "idiomas" distintos: <strong>DDL</strong>, <strong>DML</strong> y <strong>DCL</strong>. Leé este manual una vez con calma y volvé cuando quieras: después te esperan 10 niveles de práctica real.</p>
+      </div>
+
+      <div class="card man-sec">
+        <div class="man-num"><span class="n">01</span><h3>¿Qué es una base de datos?</h3></div>
+        <div class="man-body">
+          <div>
+            <p>Una <strong>base de datos</strong> es un sistema ordenado de guardar información para que después sea fácil <strong>encontrarla, actualizarla y cruzarla</strong>. No es magia: es información organizada en tablas, como el cuaderno de asistencia del preceptor — una hoja por curso, con nombre, DNI y faltas.</p>
+            <p>Ahora imaginá ese cuaderno con superpoderes: buscar cualquier alumno en milisegundos, ordenar por nota, contar ausentes de un solo comando. Eso es una base de datos.</p>
+            <p>El software que la administra se llama <strong>SGBD</strong> (Sistema Gestor de Bases de Datos): MySQL, PostgreSQL, SQLite, SQL Server. Vos le hablás en <strong>SQL</strong> (Structured Query Language) y él hace el trabajo pesado.</p>
+          </div>
+          <div>
+            <div class="demo-wrap">
+              <div class="demo-cap">TABLA: curso_4b — así se ve la información adentro</div>
+              <div id="demoTable"></div>
+            </div>
+            <div class="legend">
+              <div class="legend-item"><span class="swatch row"></span><span>Una <strong>fila</strong> (registro): todos los datos de UNA alumna, en este caso Valentina.</span></div>
+              <div class="legend-item"><span class="swatch col"></span><span>Una <strong>columna</strong> (campo): un mismo tipo de dato para todas las filas.</span></div>
+              <div class="legend-item"><span class="swatch cell"></span><span>Una <strong>celda</strong>: el valor exacto donde fila y columna se cruzan.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card man-sec">
+        <div class="man-num"><span class="n">02</span><h3>La clave primaria: cada fila tiene su DNI</h3></div>
+        <div class="man-body">
+          <div>
+            <p>Fijate en la columna <strong>id</strong> de la tabla de ejemplo: es la <strong>clave primaria</strong> (<em>PRIMARY KEY</em>). Es un número que <strong>no se repite</strong> y que identifica a cada fila de forma única, aunque dos alumnos se llamen igual.</p>
+            <p>Gracias a la clave primaria el sistema sabe exactamente qué fila actualizar o borrar, y puede relacionar tablas entre sí (por ejemplo, conectar cada nota con su alumno). En casi todas las tablas que vas a crear, la clave primaria será la columna <span class="mono">id</span>.</p>
+            <div class="note"><b>REGLA DE ORO</b>Sin clave primaria, dos filas idénticas serían indistinguibles. Con ella, cada registro es único e irrepetible.</div>
+          </div>
+          <div>
+            <div class="glossary">
+              <div><dt>tabla</dt><dd>grilla de filas y columnas</dd></div>
+              <div><dt>fila / registro</dt><dd>un elemento completo</dd></div>
+              <div><dt>columna / campo</dt><dd>un tipo de dato</dd></div>
+              <div><dt>celda</dt><dd>un valor puntual</dd></div>
+              <div><dt>consulta / query</dt><dd>pedido de datos en SQL</dd></div>
+              <div><dt>SGBD</dt><dd>software que administra la BD</dd></div>
+              <div><dt>PRIMARY KEY</dt><dd>identificador único de fila</dd></div>
+              <div><dt>NOT NULL</dt><dd>columna obligatoria</dd></div>
+              <div><dt>DEFAULT</dt><dd>valor si no se carga nada</dd></div>
+              <div><dt>SQL</dt><dd>el lenguaje que hablamos</dd></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card lang-card">
+        <div class="lang-head">
+          <div class="lang-sigla">DDL<small>DEFINIR</small></div>
+          <div class="lang-title">
+            <h3>Lenguaje de Definición de Datos</h3>
+            <div class="en">Data Definition Language · construye y destruye la ESTRUCTURA</div>
+          </div>
+        </div>
+        <div class="lang-body">
+          <div class="txt">
+            <p>El DDL define <strong>cómo está armada</strong> la base: qué tablas existen, qué columnas tienen y de qué tipo son. No trabaja con los datos de adentro, sino con el "mueble" que los contiene.</p>
+            <p><strong>CREATE</strong> crea una tabla nueva · <strong>ALTER</strong> modifica su estructura · <strong>TRUNCATE</strong> la vacía entera · <strong>DROP</strong> la elimina por completo, estructura incluida.</p>
+            <p>Cada columna además acepta <strong>restricciones</strong>: <span class="mono">NOT NULL</span>, <span class="mono">UNIQUE</span>, <span class="mono">DEFAULT valor</span> y <span class="mono">AUTOINCREMENT</span> en la clave primaria numérica.</p>
+            <div class="note"><b>ANALOGÍA</b>DDL es el carpintero: arma el mueble (o lo manda a leña). Después viene otro idioma para guardar cosas adentro.</div>
+          </div>
+          <pre class="code">CREATE TABLE estudiantes (
+  id     INTEGER PRIMARY KEY AUTOINCREMENT,
+  nombre TEXT NOT NULL,
+  nota   REAL DEFAULT 0
+);
+
+DROP TABLE estudiantes;  -- ¡la borra toda!</pre>
+        </div>
+      </div>
+
+      <div class="card lang-card">
+        <div class="lang-head">
+          <div class="lang-sigla">DML<small>MANIPULAR</small></div>
+          <div class="lang-title">
+            <h3>Lenguaje de Manipulación de Datos</h3>
+            <div class="en">Data Manipulation Language · trabaja con los DATOS de adentro</div>
+          </div>
+        </div>
+        <div class="lang-body">
+          <div class="txt">
+            <p>El DML es el que más vas a usar: consulta, agrega, modifica y borra <strong>filas</strong>, sin tocar la estructura.</p>
+            <p><strong>SELECT</strong> consulta · <strong>INSERT</strong> agrega filas · <strong>UPDATE</strong> modifica las existentes · <strong>DELETE</strong> elimina. <strong>SELECT</strong> merece capítulo propio: es el comando más usado de todo SQL — leer nunca modifica nada.</p>
+            <div class="note"><b>ANALOGÍA</b>Si DDL armó el mueble, DML es quien guarda, ordena, revisa y saca lo que hay en los cajones.</div>
+          </div>
+          <pre class="code">SELECT nombre, nota FROM estudiantes
+WHERE nota &gt;= 6;
+
+INSERT INTO estudiantes (nombre, nota)
+VALUES ('Valentina', 8.5);
+
+UPDATE estudiantes SET nota = 9 WHERE id = 1;</pre>
+        </div>
+      </div>
+
+      <div class="card lang-card">
+        <div class="lang-head">
+          <div class="lang-sigla">DCL<small>CONTROLAR</small></div>
+          <div class="lang-title">
+            <h3>Lenguaje de Control de Datos</h3>
+            <div class="en">Data Control Language · administra PERMISOS</div>
+          </div>
+        </div>
+        <div class="lang-body">
+          <div class="txt">
+            <p>El DCL responde una pregunta clave: <strong>¿quién puede hacer qué?</strong> En una escuela no cualquiera puede borrar notas: el administrador otorga y quita permisos con dos comandos.</p>
+            <p><strong>GRANT</strong> otorga un permiso (leer, insertar, borrar…) sobre una tabla a un usuario. <strong>REVOKE</strong> se lo quita. Así se protege la información de errores y miradas ajenas.</p>
+            <div class="note"><b>EN ESTE LABORATORIO</b>El DCL necesita un servidor real con usuarios, así que acá no se practica — pero sí entra en la teórica y en el parcial: con GRANT el admin decide quién ve cada tabla, y con REVOKE le cierra la puerta.</div>
+          </div>
+          <pre class="code">-- Dar permiso de LECTURA a un usuario:
+GRANT SELECT ON estudiantes TO alumno_consulta;
+
+-- Quitarle el permiso de BORRAR:
+REVOKE DELETE ON estudiantes FROM alumno_consulta;</pre>
+        </div>
+      </div>
+
+      <div class="card man-sec">
+        <div class="man-num"><span class="n">03</span><h3>Cómo funciona el laboratorio</h3></div>
+        <div class="man-body">
+          <div>
+            <p>Después del manual empezás en el <strong>Nivel 1</strong> y avanzás hasta el <strong>10</strong>: cada nivel se desbloquea al completar el anterior. Cada uno tiene una teoría exprés, una misión con objetivos que el sistema <strong>valida automáticamente</strong>, y un reto extra que da XP de bonificación.</p>
+            <p>Escribís SQL de verdad en la consola (con ayuda de los botones de inserción rápida), ejecutás con <span class="mono">Ctrl + Enter</span> y el resultado <strong>siempre se muestra como tabla</strong>. Si cambiás datos (INSERT, UPDATE, DELETE, DROP…), el panel "Base de datos en vivo" se actualiza al instante. Cada nivel guarda sus propios resultados y el texto de tu consola mientras navegás por el sistema: al avanzar de nivel, el panel de resultados arranca limpio, sin arrastrar consultas del nivel anterior. Podés restaurar los datos del nivel cuando quieras, y tu progreso queda guardado en este navegador.</p>
+            <div class="path" id="pathChips"></div>
+          </div>
+          <div>
+            <div class="note" style="margin-top:0"><b>CONSEJO DE CÁTEDRA</b>Los errores de SQL se leen, no se temen: el sistema te va a decir qué falló y por qué. Un informático que lee errores aprende el doble de rápido. Y si te trabás, cada nivel tiene pista y solución — pero probá primero por tu cuenta.</div>
+            <div style="margin-top:18px"><button class="btn primary" id="ctaStart"><i data-lucide="play"></i> Empezar por el Nivel 1</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="viewLevel" class="hidden">
+      <div class="level">
+        <div class="lv-head">
+          <div class="lv-num" id="lvNum">01</div>
+          <div>
+            <div class="lv-kicker" id="lvKicker"></div>
+            <h2 id="lvTitle"></h2>
+          </div>
+          <div class="lv-done-badge hidden" id="lvDoneBadge"><i data-lucide="check"></i> Nivel completado</div>
+        </div>
+
+        <div class="card theory">
+          <div class="card-tag"><i data-lucide="book-open"></i> Teoría exprés</div>
+          <div class="theory-grid">
+            <div class="theory-text" id="lvTheory"></div>
+            <div class="syntax-box">
+              <div class="syntax-title">Sintaxis general</div>
+              <pre id="lvSyntax"></pre>
+              <div class="syntax-note" id="lvSyntaxNote"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lv-grid">
+          <div class="lv-left">
+            <div class="card mission">
+              <div class="card-tag"><i data-lucide="list-checks"></i> Tu misión</div>
+              <div class="mission-inner">
+                <p class="mission-brief" id="lvBrief"></p>
+                <ul class="objectives" id="objList"></ul>
+                <div class="bonus-row" id="bonusRow">
+                  <span class="obj-box"><i data-lucide="star"></i></span>
+                  <div><b>RETO EXTRA · +20 XP</b><span id="bonusText"></span></div>
+                </div>
+                <div class="mission-actions">
+                  <button class="btn ghost sm" id="btnHint"><i data-lucide="lightbulb"></i> Pista</button>
+                  <button class="btn ghost sm" id="btnSol"><i data-lucide="eye"></i> Solución</button>
+                  <button class="btn ghost sm" id="btnReset"><i data-lucide="rotate-ccw"></i> Restaurar datos</button>
+                </div>
+                <div class="reveal hidden" id="hintBox"></div>
+                <div class="reveal hidden" id="solBox">
+                  <pre class="code" id="solCode"></pre>
+                  <p class="warn-note"><i data-lucide="alert-triangle"></i> Copiar sin entender no enseña: probá primero por tu cuenta.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lv-right">
+            <div class="card editor-card">
+              <div class="card-tag"><i data-lucide="terminal"></i> Consola SQL</div>
+              <div class="ed-body">
+                <div class="ed-chips" id="edChips">
+                  <span class="ed-chips-label">Insertar:</span>
+                  <button type="button" class="ed-chip" data-ins="SELECT ">SELECT</button>
+                  <button type="button" class="ed-chip" data-ins="*">*</button>
+                  <button type="button" class="ed-chip" data-ins=" FROM ">FROM</button>
+                  <button type="button" class="ed-chip" data-ins=" WHERE ">WHERE</button>
+                  <button type="button" class="ed-chip" data-ins=" = ">=</button>
+                  <button type="button" class="ed-chip" data-ins=" >= ">&gt;=</button>
+                  <button type="button" class="ed-chip" data-ins=" <= ">&lt;=</button>
+                  <button type="button" class="ed-chip" data-ins=" <> ">&lt;&gt;</button>
+                  <button type="button" class="ed-chip" data-ins=" AND ">AND</button>
+                  <button type="button" class="ed-chip" data-ins=" OR ">OR</button>
+                  <button type="button" class="ed-chip" data-ins="''" data-back="1">'texto'</button>
+                  <button type="button" class="ed-chip" data-ins="INSERT INTO ">INSERT INTO</button>
+                  <button type="button" class="ed-chip" data-ins=" VALUES ">VALUES</button>
+                  <button type="button" class="ed-chip" data-ins="UPDATE ">UPDATE</button>
+                  <button type="button" class="ed-chip" data-ins=" SET ">SET</button>
+                  <button type="button" class="ed-chip" data-ins="DELETE FROM ">DELETE FROM</button>
+                  <button type="button" class="ed-chip" data-ins="CREATE TABLE ">CREATE TABLE</button>
+                  <button type="button" class="ed-chip" data-ins=" PRIMARY KEY ">PRIMARY KEY</button>
+                  <button type="button" class="ed-chip" data-ins=" AUTOINCREMENT">AUTOINCREMENT</button>
+                  <button type="button" class="ed-chip" data-ins=" NOT NULL">NOT NULL</button>
+                  <button type="button" class="ed-chip" data-ins=" DROP TABLE ">DROP TABLE</button>
+                  <button type="button" class="ed-chip" data-ins="TRUNCATE TABLE ">TRUNCATE TABLE</button>
+                  <button type="button" class="ed-chip" data-ins=" ORDER BY ">ORDER BY</button>
+                  <button type="button" class="ed-chip" data-ins=" GROUP BY ">GROUP BY</button>
+                </div>
+                <div class="editor-wrap">
+                  <textarea id="ed" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="-- Escribí tu consulta acá"></textarea>
+                </div>
+                <div class="ed-foot">
+                  <button class="btn primary" id="btnRun"><i data-lucide="play"></i> Ejecutar</button>
+                  <span class="ed-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span> también ejecuta · separá las sentencias con «;»</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card results-card">
+              <div class="card-tag"><i data-lucide="table-2"></i> Resultados</div>
+              <div class="results-body" id="resultsBody"></div>
+            </div>
+
+            <div class="card live-card">
+              <div class="card-tag"><i data-lucide="database"></i> Base de datos en vivo</div>
+              <div class="live-body" id="liveBody"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="modal-root" id="modalRoot"></div>
+<div class="toasts" id="toasts"></div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="dev-credit">
+    Desarrollado por <strong>Matias Gonzalo Donaire</strong>
+  </div>
+  <div class="license-box">
+    <span class="cc-line">
+      Creative Commons Legal Code
+      <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">
+        CC0 1.0 Universal
+      </a>
+    </span>
+    <span class="cc-line">
+      Public Domain Dedication · creativecommons.org/publicdomain/zero/1.0
+    </span>
+    <div class="links">
+      <a href="https://gon123kt.github.io/sql-lab-4b/" target="_blank" rel="noopener">
+        gon123kt.github.io/sql-lab-4b
+      </a>
+      <a href="https://educanqn.com.ar/informatica/base_de_datos/" target="_blank" rel="noopener">
+        educanqn.com.ar/informatica/base_de_datos
+      </a>
+      <a href="https://github.com/gon123kt" target="_blank" rel="noopener">
+        Repositorios en GitHub
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+'use strict';
+
+function $(s){ return document.querySelector(s); }
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function icons(){ if(window.lucide){ window.lucide.createIcons(); } }
+function fmtMs(ms){ return (ms<0.05 ? '<0,1' : ms.toFixed(1).replace('.',',')) + ' ms'; }
+function pad2(n){ return (n<10 ? '0' : '') + n; }
+function nv(v){ return (v===undefined || v===null) ? null : v; }
+
+var store={
+  key:'sqlab-cpem17-v1',
+  data:{unlocked:1,xp:0,lv:{}},
+  load:function(){
+    try{
+      var raw=localStorage.getItem(this.key);
+      if(raw){
+        var d=JSON.parse(raw);
+        if(d && typeof d==='object'){ this.data=Object.assign({unlocked:1,xp:0,lv:{}},d); }
+      }
+    }catch(e){}
+  },
+  save:function(){ try{ localStorage.setItem(this.key, JSON.stringify(this.data)); }catch(e){} },
+  isDone:function(n){ return !!(this.data.lv[n] && this.data.lv[n].done); },
+  objs:function(n){ return (this.data.lv[n] && this.data.lv[n].objs) || {}; },
+  bonus:function(n){ return !!(this.data.lv[n] && this.data.lv[n].bonus); },
+  complete:function(n,xp){
+    this.data.lv[n]=this.data.lv[n]||{done:false,objs:{},bonus:false};
+    this.data.lv[n].done=true;
+    this.data.xp+=xp;
+    this.data.unlocked=Math.max(this.data.unlocked, Math.min(n+1,10));
+    this.save();
+  },
+  grantObj:function(n,id){
+    this.data.lv[n]=this.data.lv[n]||{done:false,objs:{},bonus:false};
+    this.data.lv[n].objs[id]=true;
+    this.save();
+  },
+  grantBonus:function(n){
+    this.data.lv[n]=this.data.lv[n]||{done:false,objs:{},bonus:false};
+    if(!this.data.lv[n].bonus){
+      this.data.lv[n].bonus=true;
+      this.data.xp+=20;
+      this.save();
+      return true;
+    }
+    return false;
+  },
+  wipe:function(){ try{ localStorage.removeItem(this.key); }catch(e){} }
+};
+
+var RANKS=[
+  [0,'Aprendiz de Datos'],[200,'Ayudante de Cátedra'],[400,'Analista de Tablas'],
+  [600,'Consultor Junior'],[800,'Arquitecto de Datos'],[1000,'DBA en Prácticas'],[1200,'Maestro del SQL']
+];
+function rankName(xp){
+  var r=RANKS[0][1];
+  RANKS.forEach(function(p){ if(xp>=p[0]){ r=p[1]; } });
+  return r;
+}
+
+function SQLError(msg){ this.message=msg; }
+SQLError.prototype=Object.create(Error.prototype);
+
+var AGG_FN={COUNT:1,SUM:1,AVG:1,MIN:1,MAX:1};
+
+function tokenize(sql){
+  var tokens=[], i=0;
+  while(i<sql.length){
+    var c=sql[i];
+    if(/\s/.test(c)){ i++; continue; }
+    if(c==='-' && sql[i+1]==='-'){ while(i<sql.length && sql[i]!=='\n'){ i++; } continue; }
+    if(c==='/' && sql[i+1]==='*'){
+      i+=2;
+      while(i<sql.length && !(sql[i]==='*' && sql[i+1]==='/')){ i++; }
+      i+=2; continue;
+    }
+    if(c==="'"){
+      var j=i+1, s='', closed=false;
+      while(j<sql.length){
+        if(sql[j]==="'" && sql[j+1]==="'"){ s+="'"; j+=2; }
+        else if(sql[j]==="'"){ j++; closed=true; break; }
+        else{ s+=sql[j]; j++; }
+      }
+      if(!closed){ throw new SQLError('Falta cerrar el texto con una comilla simple de cierre.'); }
+      tokens.push({type:'str',value:s}); i=j; continue;
+    }
+    if(/[0-9]/.test(c) || (c==='.' && /[0-9]/.test(sql[i+1]||''))){
+      var k=i;
+      while(k<sql.length && /[0-9.]/.test(sql[k])){ k++; }
+      tokens.push({type:'num',value:parseFloat(sql.slice(i,k))}); i=k; continue;
+    }
+    if(c==='-' && /[0-9.]/.test(sql[i+1]||'')){
+      var prev=tokens[tokens.length-1];
+      var unary=!prev || prev.type==='op' || prev.type==='punct';
+      if(unary){
+        var k2=i+1;
+        while(k2<sql.length && /[0-9.]/.test(sql[k2])){ k2++; }
+        tokens.push({type:'num',value:parseFloat(sql.slice(i,k2))}); i=k2; continue;
+      }
+      throw new SQLError('Las operaciones aritméticas con signo menos no están disponibles en este laboratorio: usá valores directos.');
+    }
+    if(/[A-Za-zÁÉÍÓÚÑáéíóúñ_]/.test(c)){
+      var k3=i;
+      while(k3<sql.length && /[A-Za-zÁÉÍÓÚÑáéíóúñ0-9_]/.test(sql[k3])){ k3++; }
+      tokens.push({type:'word',value:sql.slice(i,k3)}); i=k3; continue;
+    }
+    var two=sql.slice(i,i+2);
+    if(two==='>=' || two==='<=' || two==='<>'){ tokens.push({type:'op',value:two}); i+=2; continue; }
+    if(c==='!'){
+      if(sql[i+1]==='='){ tokens.push({type:'op',value:'!='}); i+=2; continue; }
+      throw new SQLError('Símbolo «!» inesperado. Para «distinto» usá <> o !=');
+    }
+    if(c==='=' || c==='<' || c==='>'){ tokens.push({type:'op',value:c}); i++; continue; }
+    if(c==='(' || c===')' || c===',' || c===';' || c==='*' || c==='.'){ tokens.push({type:'punct',value:c}); i++; continue; }
+    if(c==='+' || c==='/' || c==='%' || c==='^'){
+      throw new SQLError('Las operaciones aritméticas no están disponibles en este laboratorio: usá valores directos.');
+    }
+    throw new SQLError('Símbolo inesperado «'+c+'» en la consulta.');
+  }
+  return tokens;
+}
+
+function splitStatements(sql){
+  var out=[], cur='', inStr=false;
+  for(var i=0;i<sql.length;i++){
+    var c=sql[i];
+    if(inStr){
+      cur+=c;
+      if(c==="'"){
+        if(sql[i+1]==="'"){ cur+="'"; i++; } else{ inStr=false; }
+      }
+      continue;
+    }
+    if(c==="'"){ inStr=true; cur+=c; continue; }
+    if(c==='-' && sql[i+1]==='-'){
+      var j=sql.indexOf('\n',i);
+      if(j<0){ j=sql.length; }
+      cur+=sql.slice(i,j); i=j-1; continue;
+    }
+    if(c===';'){ out.push(cur); cur=''; continue; }
+    cur+=c;
+  }
+  if(cur.trim()){ out.push(cur); }
+  return out.map(function(s){ return s.trim(); }).filter(function(s){ return s.length>0; });
+}
+
+class Parser{
+  constructor(toks){ this.t=toks; this.i=0; }
+  peek(k){ var p=this.t[this.i+(k||0)]; return p===undefined?null:p; }
+  next(){ var p=this.t[this.i]; this.i++; return p===undefined?null:p; }
+  isKw(w){ var p=this.peek(); return !!(p && p.type==='word' && p.value.toUpperCase()===w); }
+  takeKw(w){ if(this.isKw(w)){ this.i++; return true; } return false; }
+  expectKw(w){ if(!this.takeKw(w)){ throw new SQLError('Falta la palabra clave '+w+' (o hay un error de tipeo justo antes de ahí).'); } }
+  isP(v){ var p=this.peek(); return !!(p && p.type==='punct' && p.value===v); }
+  takeP(v){ if(this.isP(v)){ this.i++; return true; } return false; }
+  expectP(v){
+    if(!this.takeP(v)){
+      var p=this.peek();
+      throw new SQLError('Falta «'+v+'» en la posición donde va.'+(p?(' Encontré «'+p.value+'» en su lugar.'):''));
+    }
+  }
+  ident(){
+    var p=this.peek();
+    if(!p || p.type!=='word'){ throw new SQLError('Se esperaba un nombre (de tabla o columna) ahí.'); }
+    this.i++; return p.value.toLowerCase();
+  }
+  end(){
+    if(this.i<this.t.length){
+      throw new SQLError('Sobra «'+this.t[this.i].value+'» después de la sentencia. ¿Te faltó el «;» entre dos consultas?');
+    }
+  }
+  parseAggCall(){
+    var fn=this.next().value.toUpperCase();
+    this.expectP('(');
+    var arg;
+    if(this.takeP('*')){ arg='*'; } else { arg=this.ident(); }
+    this.expectP(')');
+    return {fn:fn,arg:arg};
+  }
+  parseSelectItem(){
+    var p=this.peek();
+    if(p && p.type==='word' && AGG_FN[p.value.toUpperCase()] && this.peek(1) && this.peek(1).value==='('){
+      var agg=this.parseAggCall();
+      var a1=null;
+      if(this.takeKw('AS')){ a1=this.ident(); }
+      return {agg:agg,alias:a1};
+    }
+    var col=this.ident();
+    var a2=null;
+    if(this.takeKw('AS')){ a2=this.ident(); }
+    return {col:col,alias:a2};
+  }
+  parseOperand(allowAgg){
+    var p=this.peek();
+    if(!p){ throw new SQLError('Falta un valor al final de la comparación.'); }
+    if(p.type==='num'){ this.i++; return {type:'val',value:p.value}; }
+    if(p.type==='str'){ this.i++; return {type:'val',value:p.value}; }
+    if(p.type==='word'){
+      var up=p.value.toUpperCase();
+      if(up==='NULL'){ this.i++; return {type:'val',value:null}; }
+      if(AGG_FN[up] && this.peek(1) && this.peek(1).value==='('){
+        if(!allowAgg){ throw new SQLError('No se puede usar '+up+'() dentro de WHERE. Las funciones de agrupación van en SELECT o en HAVING.'); }
+        this.i++;
+        this.expectP('(');
+        var arg;
+        if(this.takeP('*')){ arg='*'; } else { arg=this.ident(); }
+        this.expectP(')');
+        return {type:'agg',fn:up,arg:arg};
+      }
+      this.i++;
+      return {type:'col',name:p.value.toLowerCase()};
+    }
+    throw new SQLError('No entiendo «'+p.value+'» en esta posición.');
+  }
+  parsePrimary(allowAgg){
+    if(this.takeP('(')){
+      var e=this.parseOr(allowAgg);
+      this.expectP(')');
+      e.paren=true;
+      return e;
+    }
+    var left=this.parseOperand(allowAgg);
+    var opt=this.next();
+    if(!opt || opt.type!=='op'){
+      throw new SQLError('En una comparación se esperaba =, <>, >, <, >= o <=.');
+    }
+    var right=this.parseOperand(allowAgg);
+    return {type:'cmp',op:opt.value,left:left,right:right};
+  }
+  parseNot(a){ if(this.takeKw('NOT')){ return {type:'not',expr:this.parseNot(a)}; } return this.parsePrimary(a); }
+  parseAnd(a){
+    var l=this.parseNot(a);
+    while(this.takeKw('AND')){ l={type:'and',left:l,right:this.parseNot(a)}; }
+    return l;
+  }
+  parseOr(a){
+    var l=this.parseAnd(a);
+    while(this.takeKw('OR')){ l={type:'or',left:l,right:this.parseAnd(a)}; }
+    return l;
+  }
+  parseSelect(){
+    this.expectKw('SELECT');
+    var distinct=this.takeKw('DISTINCT');
+    var items=[];
+    if(this.takeP('*')){ items.push({star:true}); }
+    else{
+      do{ items.push(this.parseSelectItem()); }while(this.takeP(','));
+    }
+    this.expectKw('FROM');
+    var from=this.ident();
+    var where=null;
+    if(this.takeKw('WHERE')){ where=this.parseOr(false); }
+    var groupBy=null;
+    if(this.takeKw('GROUP')){
+      this.expectKw('BY');
+      groupBy=[this.ident()];
+      while(this.takeP(',')){ groupBy.push(this.ident()); }
+    }
+    var having=null;
+    if(this.takeKw('HAVING')){ having=this.parseOr(true); }
+    var orderBy=null;
+    if(this.takeKw('ORDER')){
+      this.expectKw('BY');
+      orderBy=[];
+      do{
+        var key;
+        var p=this.peek();
+        if(p && p.type==='word' && AGG_FN[p.value.toUpperCase()] && this.peek(1) && this.peek(1).value==='('){
+          key=this.parseAggCall();
+        } else {
+          key=this.ident();
+        }
+        var dir='asc';
+        if(this.takeKw('DESC')){ dir='desc'; } else { this.takeKw('ASC'); }
+        orderBy.push({col:key,dir:dir});
+      }while(this.takeP(','));
+    }
+    var limit=null;
+    if(this.takeKw('LIMIT')){
+      var t=this.next();
+      if(!t || t.type!=='num' || !Number.isInteger(t.value) || t.value<0){
+        throw new SQLError('LIMIT necesita un número entero.');
+      }
+      limit=t.value;
+    }
+    return {type:'select',distinct:distinct,items:items,from:from,where:where,groupBy:groupBy,having:having,orderBy:orderBy,limit:limit};
+  }
+  parseInsert(){
+    this.expectKw('INSERT');
+    this.expectKw('INTO');
+    var table=this.ident();
+    var columns=null;
+    if(this.takeP('(')){
+      columns=[this.ident()];
+      while(this.takeP(',')){ columns.push(this.ident()); }
+      this.expectP(')');
+    }
+    this.expectKw('VALUES');
+    var values=[];
+    do{
+      this.expectP('(');
+      var row=[];
+      do{
+        var t=this.peek();
+        if(t && t.type==='num'){ row.push(t.value); this.i++; }
+        else if(t && t.type==='str'){ row.push(t.value); this.i++; }
+        else if(t && t.type==='word' && t.value.toUpperCase()==='NULL'){ row.push(null); this.i++; }
+        else{ throw new SQLError('En VALUES solo se permiten números, texto entre comillas simples o NULL.'); }
+      }while(this.takeP(','));
+      this.expectP(')');
+      values.push(row);
+    }while(this.takeP(','));
+    return {type:'insert',table:table,columns:columns,values:values};
+  }
+  parseValue(){
+    var t=this.peek();
+    if(t && t.type==='num'){ this.i++; return t.value; }
+    if(t && t.type==='str'){ this.i++; return t.value; }
+    if(t && t.type==='word' && t.value.toUpperCase()==='NULL'){ this.i++; return null; }
+    throw new SQLError('Se esperaba un valor: número, texto entre comillas simples o NULL.');
+  }
+  parseUpdate(){
+    this.expectKw('UPDATE');
+    var table=this.ident();
+    this.expectKw('SET');
+    var sets=[];
+    do{
+      var col=this.ident();
+      var op=this.next();
+      if(!op || op.type!=='op' || op.value!=='='){
+        throw new SQLError('En SET se usa el signo igual: SET columna = valor.');
+      }
+      sets.push([col,this.parseValue()]);
+    }while(this.takeP(','));
+    var where=null;
+    if(this.takeKw('WHERE')){ where=this.parseOr(false); }
+    return {type:'update',table:table,sets:sets,where:where};
+  }
+  parseDelete(){
+    this.expectKw('DELETE');
+    this.expectKw('FROM');
+    var table=this.ident();
+    var where=null;
+    if(this.takeKw('WHERE')){ where=this.parseOr(false); }
+    return {type:'delete',table:table,where:where};
+  }
+  parseCreate(){
+    this.expectKw('CREATE');
+    this.expectKw('TABLE');
+    var ifNotExists=false;
+    if(this.takeKw('IF')){ this.expectKw('NOT'); this.expectKw('EXISTS'); ifNotExists=true; }
+    var table=this.ident();
+    this.expectP('(');
+    var columns=[];
+    var types={INTEGER:'INTEGER',INT:'INTEGER',NUMBER:'INTEGER',NUMERIC:'INTEGER',REAL:'REAL',FLOAT:'REAL',DECIMAL:'REAL',TEXT:'TEXT',STRING:'TEXT',DATE:'TEXT'};
+    var TABLE_CONSTRAINTS={PRIMARY:1,UNIQUE:1,FOREIGN:1,CHECK:1,CONSTRAINT:1};
+    var pkCount=0;
+    do{
+      var p0=this.peek();
+      if(p0 && p0.type==='word' && TABLE_CONSTRAINTS[p0.value.toUpperCase()]){
+        var upc=p0.value.toUpperCase();
+        if(upc==='PRIMARY'){
+          this.next();
+          this.expectKw('KEY');
+          this.expectP('(');
+          var pkc=this.ident();
+          if(this.isP(',')){
+            throw new SQLError('Claves primarias compuestas (varias columnas) no están disponibles en este laboratorio: usá una sola columna PRIMARY KEY.');
+          }
+          this.expectP(')');
+          var fpk=null;
+          columns.forEach(function(c){ if(c.name===pkc){ fpk=c; } });
+          if(!fpk){ throw new SQLError('PRIMARY KEY ('+pkc+'): esa columna no está declarada antes en la tabla.'); }
+          if(!fpk.pk){ fpk.pk=true; pkCount++; }
+          continue;
+        }
+        if(upc==='UNIQUE'){
+          this.next();
+          this.expectP('(');
+          var uc=this.ident();
+          this.expectP(')');
+          var fu=null;
+          columns.forEach(function(c){ if(c.name===uc){ fu=c; } });
+          if(!fu){ throw new SQLError('UNIQUE ('+uc+'): esa columna no está declarada antes en la tabla.'); }
+          fu.unique=true;
+          continue;
+        }
+        if(upc==='FOREIGN'){
+          throw new SQLError('FOREIGN KEY / REFERENCES no está disponible en este laboratorio: acá se trabaja con una tabla por vez.');
+        }
+        if(upc==='CHECK'){
+          throw new SQLError('CHECK no está disponible en este laboratorio.');
+        }
+        if(upc==='CONSTRAINT'){
+          throw new SQLError('CONSTRAINT con nombre no está disponible: escribí la restricción directo en la columna (NOT NULL, UNIQUE, PRIMARY KEY, DEFAULT).');
+        }
+      }
+      var name=this.ident();
+      var t=this.next();
+      if(!t || t.type!=='word'){
+        throw new SQLError('Falta el tipo de dato de la columna «'+name+'» (usá INTEGER, REAL o TEXT).');
+      }
+      var type=t.value.toUpperCase();
+      if(type==='VARCHAR' || type==='CHAR'){
+        if(this.takeP('(')){ this.next(); this.expectP(')'); }
+        type='TEXT';
+      }
+      if(!types[type]){
+        throw new SQLError('El tipo «'+type+'» no está disponible acá. Usá INTEGER (enteros), REAL (decimales) o TEXT (texto).');
+      }
+      type=types[type];
+      var col={name:name,type:type,pk:false,notNull:false,unique:false,autoInc:false,def:undefined};
+      for(;;){
+        if(this.takeKw('PRIMARY')){ this.expectKw('KEY'); col.pk=true; pkCount++; continue; }
+        if(this.takeKw('AUTOINCREMENT') || this.takeKw('AUTO_INCREMENT')){ col.autoInc=true; continue; }
+        if(this.takeKw('NOT')){ this.expectKw('NULL'); col.notNull=true; continue; }
+        if(this.takeKw('NULL')){ continue; }
+        if(this.takeKw('UNIQUE')){ col.unique=true; continue; }
+        if(this.takeKw('DEFAULT')){ col.def=this.parseValue(); continue; }
+        break;
+      }
+      var after=this.peek();
+      if(after && after.type==='word'){
+        throw new SQLError('No entiendo la restricción «'+after.value+'» en la columna «'+name+'». Permitidas: PRIMARY KEY, AUTOINCREMENT, NOT NULL, NULL, UNIQUE, DEFAULT valor.');
+      }
+      columns.push(col);
+    }while(this.takeP(','));
+    this.expectP(')');
+    if(pkCount===0){
+      throw new SQLError('Toda tabla necesita una PRIMARY KEY: marcá una columna con INTEGER PRIMARY KEY (por ejemplo id), o agregá PRIMARY KEY (columna) al final.');
+    }
+    if(pkCount>1){
+      throw new SQLError('Encontré más de una columna marcada como PRIMARY KEY. En este laboratorio la clave primaria es una sola columna.');
+    }
+    columns.forEach(function(c){
+      if(c.autoInc && (c.type!=='INTEGER' || !c.pk)){
+        throw new SQLError('AUTOINCREMENT se usa en la clave primaria numérica: la columna «'+c.name+'» debe ser INTEGER PRIMARY KEY AUTOINCREMENT.');
+      }
+    });
+    return {type:'create',table:table,columns:columns,ifNotExists:ifNotExists};
+  }
+  parseDrop(){
+    this.expectKw('DROP');
+    this.expectKw('TABLE');
+    var ifExists=false;
+    if(this.takeKw('IF')){ this.expectKw('EXISTS'); ifExists=true; }
+    var table=this.ident();
+    return {type:'drop',table:table,ifExists:ifExists};
+  }
+  parseTruncate(){
+    this.expectKw('TRUNCATE');
+    this.takeKw('TABLE');
+    var table=this.ident();
+    return {type:'truncate',table:table};
+  }
+}
+
+function parseStatement(tokens){
+  var p=new Parser(tokens);
+  var first=p.peek();
+  if(!first){ throw new SQLError('La consulta está vacía.'); }
+  if(first.type!=='word'){
+    throw new SQLError('La consulta debe empezar con una palabra clave: SELECT, INSERT, UPDATE, DELETE, CREATE, DROP o TRUNCATE.');
+  }
+  var kw=first.value.toUpperCase();
+  var stmt;
+  if(kw==='SELECT'){ stmt=p.parseSelect(); }
+  else if(kw==='INSERT'){ stmt=p.parseInsert(); }
+  else if(kw==='UPDATE'){ stmt=p.parseUpdate(); }
+  else if(kw==='DELETE'){ stmt=p.parseDelete(); }
+  else if(kw==='CREATE'){ stmt=p.parseCreate(); }
+  else if(kw==='DROP'){ stmt=p.parseDrop(); }
+  else if(kw==='TRUNCATE'){ stmt=p.parseTruncate(); }
+  else if(kw==='ALTER'){
+    throw new SQLError('ALTER TABLE pertenece al DDL avanzado y no está disponible en este laboratorio. Podés hacer DROP TABLE y CREATE TABLE de nuevo.');
+  }
+  else if(kw==='GRANT' || kw==='REVOKE'){
+    throw new SQLError('«'+kw+'» pertenece al DCL (permisos) y acá no hay usuarios: en el manual está la teoría que entra en el parcial.');
+  }
+  else{
+    throw new SQLError('No reconozco «'+first.value+'» como inicio de una consulta. Palabras clave válidas: SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, TRUNCATE.');
+  }
+  p.end();
+  return stmt;
+}
+
+function toNum(v){
+  if(typeof v==='number'){ return v; }
+  if(typeof v==='string' && /^-?\d+(\.\d+)?$/.test(v.trim())){ return parseFloat(v); }
+  return null;
+}
+function cmpVals(a,b){
+  var na=toNum(a), nb=toNum(b);
+  if(na!==null && nb!==null){ return na-nb; }
+  return String(a).localeCompare(String(b),'es',{sensitivity:'base'});
+}
+function getTable(db,name){
+  var tb=db[name];
+  if(!tb){
+    var avail=Object.keys(db).join(', ');
+    throw new SQLError('La tabla «'+name+'» no existe.'+(avail?(' Tablas disponibles: '+avail+'.'):' La base está vacía: primero creá una con CREATE TABLE.'));
+  }
+  return tb;
+}
+function coerce(colName,type,v){
+  if(v===null){ return null; }
+  if(type==='INTEGER'){
+    var n=toNum(v);
+    if(n===null || !Number.isInteger(n)){ throw new SQLError('La columna «'+colName+'» es INTEGER (número entero) y recibió '+JSON.stringify(v)+'.'); }
+    return n;
+  }
+  if(type==='REAL'){
+    var n2=toNum(v);
+    if(n2===null){ throw new SQLError('La columna «'+colName+'» es REAL (número) y recibió '+JSON.stringify(v)+'.'); }
+    return n2;
+  }
+  return String(v);
+}
+function nextId(tb){
+  var pk=null;
+  tb.columns.forEach(function(c){ if(c.pk){ pk=c; } });
+  if(!pk){ pk=tb.columns[0]; }
+  var max=0;
+  tb.rows.forEach(function(r){
+    var n=toNum(r[pk.name]);
+    if(n!==null && n>max){ max=n; }
+  });
+  return max+1;
+}
+function computeAgg(fn,arg,rows){
+  if(fn==='COUNT'){
+    if(arg==='*'){ return rows.length; }
+    return rows.filter(function(r){ return r[arg]!==null && r[arg]!==undefined; }).length;
+  }
+  var vals=rows.map(function(r){ return r[arg]; }).filter(function(v){ return v!==null && v!==undefined; });
+  if(fn==='MIN' || fn==='MAX'){
+    if(vals.length===0){ return null; }
+    var s=vals.slice().sort(cmpVals);
+    return fn==='MIN' ? s[0] : s[s.length-1];
+  }
+  var nums=vals.map(toNum);
+  var bad=nums.some(function(x){ return x===null; });
+  if(bad){ throw new SQLError(fn+'() solo funciona con números y la columna «'+arg+'» tiene valores que no lo son.'); }
+  if(nums.length===0){ return null; }
+  var total=nums.reduce(function(a,b){ return a+b; },0);
+  return fn==='SUM' ? total : total/nums.length;
+}
+function operandVal(o,row,gctx){
+  if(o.type==='val'){ return o.value; }
+  if(o.type==='agg'){
+    if(!gctx || !gctx.entry){ throw new SQLError('Esa función de agregación no corresponde en este lugar.'); }
+    return computeAgg(o.fn,o.arg,gctx.entry.grp||[]);
+  }
+  if(gctx && gctx.entry){
+    var en=gctx.entry;
+    if(gctx.headerMap && Object.prototype.hasOwnProperty.call(gctx.headerMap,o.name)){ return nv(gctx.outRow[gctx.headerMap[o.name]]); }
+    if(en.src && (o.name in en.src)){ return nv(en.src[o.name]); }
+    return null;
+  }
+  return row ? nv(row[o.name]) : null;
+}
+function evalExpr(n,row,gctx){
+  if(!n){ return false; }
+  if(n.type==='or'){ return evalExpr(n.left,row,gctx) || evalExpr(n.right,row,gctx); }
+  if(n.type==='and'){ return evalExpr(n.left,row,gctx) && evalExpr(n.right,row,gctx); }
+  if(n.type==='not'){ return !evalExpr(n.expr,row,gctx); }
+  if(n.type==='cmp'){
+    var a=operandVal(n.left,row,gctx);
+    var b=operandVal(n.right,row,gctx);
+    if(a===null || b===null){ return false; }
+    var c=cmpVals(a,b);
+    if(n.op==='='){ return c===0; }
+    if(n.op==='<>' || n.op==='!='){ return c!==0; }
+    if(n.op==='>'){ return c>0; }
+    if(n.op==='<'){ return c<0; }
+    if(n.op==='>='){ return c>=0; }
+    if(n.op==='<='){ return c<=0; }
+    return false;
+  }
+  return false;
+}
+function walkWhere(n,f){
+  if(!n){ return; }
+  if(n.type==='and' || n.type==='or'){ f(n); walkWhere(n.left,f); walkWhere(n.right,f); }
+  else if(n.type==='not'){ walkWhere(n.expr,f); }
+  else if(n.type==='cmp'){ f(n); }
+}
+function collectCols(n){
+  var s={};
+  walkWhere(n,function(x){
+    [x.left,x.right].forEach(function(o){ if(o.type==='col'){ s[o.name]=1; } });
+  });
+  return Object.keys(s);
+}
+function validateExprCols(n,tb,where){
+  var names=tb.columns.map(function(c){ return c.name; });
+  collectCols(n).forEach(function(c){
+    if(names.indexOf(c)<0){
+      throw new SQLError('La columna «'+c+'» '+(where?'del WHERE':'que mencionás')+' no existe en «'+tb.name+'». Columnas disponibles: '+names.join(', ')+'.');
+    }
+  });
+  walkWhere(n,function(x){
+    [x.left,x.right].forEach(function(o){
+      if(o.type==='agg' && o.arg!=='*' && names.indexOf(o.arg)<0){
+        throw new SQLError('La columna «'+o.arg+'» no existe en «'+tb.name+'». Columnas: '+names.join(', ')+'.');
+      }
+    });
+  });
+}
+
+function runSelect(db,stmt){
+  var tb=getTable(db,stmt.from);
+  var names=tb.columns.map(function(c){ return c.name; });
+  if(stmt.groupBy){
+    stmt.groupBy.forEach(function(g){
+      if(names.indexOf(g)<0){
+        throw new SQLError('La columna «'+g+'» del GROUP BY no existe en «'+tb.name+'». Columnas: '+names.join(', ')+'.');
+      }
+    });
+  }
+  var hasAgg=stmt.items.some(function(it){ return !!it.agg; }) || !!stmt.having;
+  if(stmt.where){ validateExprCols(stmt.where,tb,true); }
+  if(stmt.having){ validateExprCols(stmt.having,tb,false); }
+  if(stmt.items.length===1 && stmt.items[0].star){
+    if(hasAgg){ throw new SQLError('No podés mezclar el asterisco (*) con funciones de agregación como COUNT o SUM.'); }
+    if(stmt.groupBy){ throw new SQLError('Con GROUP BY no se usa *: elegí las columnas concretas (por ejemplo, la que agrupás) y las funciones.'); }
+  }
+  if(hasAgg && !stmt.groupBy){
+    var loose=stmt.items.filter(function(it){ return !it.agg && !it.star; });
+    if(loose.length){
+      var ls=loose.map(function(i){ return i.col; }).join(', ');
+      throw new SQLError('Mezclaste columnas sueltas ('+ls+') con funciones de agregación. Agrupá con GROUP BY por esas columnas, o pedí únicamente la función.');
+    }
+  } else if(hasAgg && stmt.groupBy){
+    stmt.items.forEach(function(it){
+      if(!it.agg && !it.star && stmt.groupBy.indexOf(it.col)<0){
+        throw new SQLError('La columna «'+it.col+'» no está en el GROUP BY. Agrupá también por ella, o usá una función como COUNT('+it.col+').');
+      }
+    });
+  }
+
+  var rows=tb.rows;
+  if(stmt.where){ rows=rows.filter(function(r){ return evalExpr(stmt.where,r,null); }); }
+
+  var entries;
+  if(hasAgg && !stmt.groupBy){
+    entries=[{src:(rows[0]||null),grp:rows}];
+  } else if(stmt.groupBy){
+    var m=new Map();
+    rows.forEach(function(r){
+      var k=stmt.groupBy.map(function(g){ return String(r[g]); }).join('\u0001');
+      if(!m.has(k)){ m.set(k,[]); }
+      m.get(k).push(r);
+    });
+    entries=Array.from(m.values()).map(function(gr){ return {src:gr[0],grp:gr}; });
+  } else {
+    entries=rows.map(function(r){ return {src:r,grp:null}; });
+  }
+
+  var columns;
+  if(stmt.items.length===1 && stmt.items[0].star){
+    columns=names.slice();
+  } else {
+    columns=stmt.items.map(function(it){
+      if(it.alias){ return it.alias; }
+      if(it.agg){ return it.agg.fn+'('+it.agg.arg+')'; }
+      return it.col;
+    });
+  }
+  var headerMap={};
+  columns.forEach(function(c,ix){ headerMap[c.toLowerCase()]=ix; });
+
+  function proj(en){
+    if(stmt.items.length===1 && stmt.items[0].star){
+      return tb.columns.map(function(c){ return en.src ? nv(en.src[c.name]) : null; });
+    }
+    return stmt.items.map(function(it){
+      if(it.agg){ return computeAgg(it.agg.fn,it.agg.arg,en.grp||[]); }
+      return en.src ? nv(en.src[it.col]) : null;
+    });
+  }
+
+  var outRows=entries.map(proj);
+
+  if(stmt.having){
+    var keepE=[], keepO=[];
+    entries.forEach(function(en,i){
+      var ok=evalExpr(stmt.having,null,{entry:en,outRow:outRows[i],headerMap:headerMap});
+      if(ok){ keepE.push(en); keepO.push(outRows[i]); }
+    });
+    entries=keepE; outRows=keepO;
+  }
+  if(stmt.distinct){
+    var seen={}, dE=[], dO=[];
+    entries.forEach(function(en,i){
+      var k=JSON.stringify(outRows[i]);
+      if(!seen[k]){ seen[k]=1; dE.push(en); dO.push(outRows[i]); }
+    });
+    entries=dE; outRows=dO;
+  }
+  if(stmt.orderBy){
+    var keyed=entries.map(function(en,i){ return {en:en,out:outRows[i]}; });
+    function resolv(k,key){
+      if(typeof key==='string'){
+        if(Object.prototype.hasOwnProperty.call(headerMap,key)){ return k.out[headerMap[key]]; }
+        return k.en.src ? nv(k.en.src[key]) : null;
+      }
+      var grp=k.en.grp || (k.en.src ? [k.en.src] : []);
+      return computeAgg(key.fn,key.arg,grp);
+    }
+    keyed.sort(function(A,B){
+      for(var j=0;j<stmt.orderBy.length;j++){
+        var ob=stmt.orderBy[j];
+        var va=resolv(A,ob.col), vb=resolv(B,ob.col);
+        var na=(va===null||va===undefined), nb=(vb===null||vb===undefined);
+        if(na && nb){ continue; }
+        if(na){ return 1; }
+        if(nb){ return -1; }
+        var c=cmpVals(va,vb);
+        if(c!==0){ return ob.dir==='desc' ? -c : c; }
+      }
+      return 0;
+    });
+    entries=keyed.map(function(k){ return k.en; });
+    outRows=keyed.map(function(k){ return k.out; });
+  }
+  if(stmt.limit!==null && stmt.limit!==undefined){
+    outRows=outRows.slice(0,stmt.limit);
+  }
+  return {columns:columns,rows:outRows};
+}
+
+function execStatement(db,stmt){
+  if(stmt.type==='create'){
+    if(db[stmt.table]){
+      if(stmt.ifNotExists){
+        return {warn:true,message:'La tabla «'+stmt.table+'» ya existe; no se creó nada (usaste IF NOT EXISTS).'};
+      }
+      throw new SQLError('La tabla «'+stmt.table+'» ya existe. Si querés redefinirla, primero hacé DROP TABLE '+stmt.table+';');
+    }
+    var seen={}, dupCol=null;
+    stmt.columns.forEach(function(c){ if(seen[c.name]){ dupCol=c.name; } seen[c.name]=1; });
+    if(dupCol){ throw new SQLError('La columna «'+dupCol+'» está repetida en el CREATE TABLE.'); }
+    var hasPk=false;
+    stmt.columns.forEach(function(c){ if(c.pk){ hasPk=true; } });
+    if(!hasPk){ throw new SQLError('Toda tabla necesita una PRIMARY KEY: marcá una columna con INTEGER PRIMARY KEY (por ejemplo id).'); }
+    db[stmt.table]={name:stmt.table,columns:stmt.columns,rows:[]};
+    var desc=stmt.columns.map(function(c){
+      var extra='';
+      if(c.pk){ extra+=' PRIMARY KEY'; }
+      if(c.autoInc){ extra+=' AUTOINCREMENT'; }
+      if(c.notNull){ extra+=' NOT NULL'; }
+      if(c.unique){ extra+=' UNIQUE'; }
+      if(c.def!==undefined){ extra+=' DEFAULT '+(c.def===null?'NULL':JSON.stringify(c.def)); }
+      return c.name+' '+c.type+extra;
+    }).join(', ');
+    return {message:'Tabla «'+stmt.table+'» creada ('+desc+').'};
+  }
+  if(stmt.type==='insert'){
+    var tb=getTable(db,stmt.table);
+    var target;
+    if(stmt.columns){
+      var names=tb.columns.map(function(c){ return c.name; });
+      stmt.columns.forEach(function(c){
+        if(names.indexOf(c)<0){
+          throw new SQLError('La columna «'+c+'» no existe en «'+tb.name+'». Columnas disponibles: '+names.join(', ')+'.');
+        }
+      });
+      target=stmt.columns;
+    } else {
+      target=tb.columns.map(function(c){ return c.name; });
+    }
+    stmt.values.forEach(function(vs){
+      if(vs.length!==target.length){
+        throw new SQLError('Diste '+vs.length+' valor(es) pero indicaste '+target.length+' columna(s). Los VALUES tienen que coincidir con la lista de columnas.');
+      }
+      var row={};
+      target.forEach(function(c,ix){
+        var col=null;
+        tb.columns.forEach(function(x){ if(x.name===c){ col=x; } });
+        row[c]=coerce(c,col.type,vs[ix]);
+      });
+      tb.columns.forEach(function(col){
+        if(!(col.name in row)){
+          if(col.pk){ row[col.name]=nextId(tb); }
+          else if(col.def!==undefined){ row[col.name]=coerce(col.name,col.type,col.def); }
+          else if(col.notNull){ throw new SQLError('La columna «'+col.name+'» es NOT NULL y no recibió valor en el INSERT.'); }
+          else{ row[col.name]=null; }
+        } else if(row[col.name]===null && col.pk){
+          row[col.name]=nextId(tb);
+        }
+      });
+      tb.columns.forEach(function(col){
+        if(row[col.name]===null && col.notNull){
+          throw new SQLError('La columna «'+col.name+'» es NOT NULL: no puede recibir NULL.');
+        }
+        if((col.pk || col.unique) && row[col.name]!==null){
+          var val=row[col.name];
+          var dup=false;
+          tb.rows.forEach(function(r){ if(r[col.name]===val){ dup=true; } });
+          if(dup){
+            throw new SQLError('Ya existe una fila con '+col.name+'='+val+(col.pk?' (clave primaria).':' (columna UNIQUE).'));
+          }
+        }
+      });
+      tb.rows.push(row);
+    });
+    var vn=stmt.values.length;
+    return {message:vn+' '+(vn===1?'fila insertada':'filas insertadas')+' en «'+tb.name+'».'};
+  }
+  if(stmt.type==='update'){
+    var tb2=getTable(db,stmt.table);
+    var names2=tb2.columns.map(function(c){ return c.name; });
+    stmt.sets.forEach(function(s){
+      if(names2.indexOf(s[0])<0){
+        throw new SQLError('La columna «'+s[0]+'» no existe en «'+tb2.name+'». Columnas disponibles: '+names2.join(', ')+'.');
+      }
+    });
+    if(stmt.where){ validateExprCols(stmt.where,tb2,true); }
+    var matches=tb2.rows.filter(function(r){ return stmt.where ? evalExpr(stmt.where,r,null) : true; });
+    stmt.sets.forEach(function(s){
+      var col=null;
+      tb2.columns.forEach(function(x){ if(x.name===s[0]){ col=x; } });
+      var nuevo=coerce(s[0],col.type,s[1]);
+      if(nuevo===null && col.notNull){
+        throw new SQLError('La columna «'+s[0]+'» es NOT NULL: no puede recibir NULL.');
+      }
+      if((col.pk || col.unique) && nuevo!==null){
+        var dup=false;
+        tb2.rows.forEach(function(r){
+          if(r[s[0]]===nuevo && matches.indexOf(r)<0){ dup=true; }
+        });
+        if(dup){
+          throw new SQLError('Ya hay otra fila con '+s[0]+'='+nuevo+(col.pk?' (la clave primaria no puede repetirse).':' (columna UNIQUE).'));
+        }
+      }
+    });
+    matches.forEach(function(r){
+      stmt.sets.forEach(function(s){
+        var col2=null;
+        tb2.columns.forEach(function(x){ if(x.name===s[0]){ col2=x; } });
+        r[s[0]]=coerce(s[0],col2.type,s[1]);
+      });
+    });
+    if(!stmt.where && tb2.rows.length>0){
+      return {warn:true,message:'Como no había WHERE, se actualizaron TODAS las filas ('+matches.length+'). ¡Ojo! En la vida real ese despiste cambia datos de verdad.'};
+    }
+    var mn=matches.length;
+    return {message:mn+' '+(mn===1?'fila actualizada':'filas actualizadas')+' en «'+tb2.name+'».'};
+  }
+  if(stmt.type==='delete'){
+    var tb3=getTable(db,stmt.table);
+    if(stmt.where){ validateExprCols(stmt.where,tb3,true); }
+    var matches3=tb3.rows.filter(function(r){ return stmt.where ? evalExpr(stmt.where,r,null) : true; });
+    tb3.rows=tb3.rows.filter(function(r){ return matches3.indexOf(r)<0; });
+    if(!stmt.where && matches3.length>0){
+      return {warn:true,message:'Como no había WHERE, se eliminaron TODAS las filas ('+matches3.length+'). La tabla sigue existiendo, pero quedó vacía.'};
+    }
+    var md=matches3.length;
+    return {message:md+' '+(md===1?'fila eliminada':'filas eliminadas')+' de «'+tb3.name+'».'};
+  }
+  if(stmt.type==='drop'){
+    if(!db[stmt.table]){
+      if(stmt.ifExists){
+        return {warn:true,message:'La tabla «'+stmt.table+'» no existía; no hubo nada que eliminar (usaste IF EXISTS).'};
+      }
+      throw new SQLError('La tabla «'+stmt.table+'» no existe, así que no se puede eliminar.');
+    }
+    var had=db[stmt.table].rows.length;
+    delete db[stmt.table];
+    var extra=had ? (' Tenía '+had+' '+(had===1?'fila':'filas')+'.') : '';
+    return {message:'Tabla «'+stmt.table+'» eliminada por completo — estructura y datos.'+extra};
+  }
+  if(stmt.type==='truncate'){
+    var tb4=getTable(db,stmt.table);
+    var nf=tb4.rows.length;
+    tb4.rows=[];
+    return {message:'Tabla «'+tb4.name+'» vaciada: se borraron '+nf+' '+(nf===1?'fila':'filas')+', pero la estructura sigue en pie. (Con DROP la habrías eliminado del todo.)'};
+  }
+  if(stmt.type==='select'){
+    var res=runSelect(db,stmt);
+    return {message:'Consulta ejecutada.',result:res};
+  }
+  throw new SQLError('Sentencia no soportada.');
+}
+
+function runSQL(db,sql){
+  var parts=splitStatements(sql);
+  if(parts.length===0){
+    return [{status:'err',message:'No escribiste ninguna consulta: el editor está vacío.'}];
+  }
+  var outs=[];
+  parts.forEach(function(part){
+    var t0=performance.now();
+    try{
+      var stmt=parseStatement(tokenize(part));
+      var res=execStatement(db,stmt);
+      var ms=performance.now()-t0;
+      outs.push({status:res.warn?'warn':'ok',stmt:stmt,sql:part,message:res.message,result:res.result,ms:ms});
+    }catch(e){
+      var msg=(e && e.message) ? e.message : 'Error inesperado al ejecutar la consulta.';
+      outs.push({status:'err',sql:part,message:msg});
+    }
+  });
+  return outs;
+}
+
+function okHist(){ return state.lv.hist.filter(function(h){ return !!h.stmt; }); }
+function lastSel(table){
+  var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from===table && h.result; });
+  return arr.length ? arr[arr.length-1] : null;
+}
+function colIx(h,name){
+  return h.result.columns.findIndex(function(c){ return c.toLowerCase()===name; });
+}
+function valSet(h,name){
+  var ix=colIx(h,name);
+  if(ix<0){ return null; }
+  var s=new Set();
+  h.result.rows.forEach(function(r){ s.add(String(r[ix])); });
+  return s;
+}
+function setEq(s,arr){
+  if(!s){ return false; }
+  if(s.size!==arr.length){ return false; }
+  return arr.every(function(v){ return s.has(String(v)); });
+}
+function findCmp(n,col){
+  var out=[];
+  var flip={'>':'<','<':'>','>=':'<=','<=':'>=','=':'=','<>':'<>','!=':'!='};
+  walkWhere(n,function(x){
+    if(x.type!=='cmp'){ return; }
+    if(x.left.type==='col' && x.left.name===col){
+      out.push({op:x.op,val:x.right.type==='val'?x.right.value:undefined});
+    } else if(x.right.type==='col' && x.right.name===col){
+      out.push({op:flip[x.op],val:x.left.type==='val'?x.left.value:undefined});
+    }
+  });
+  return out;
+}
+function logicHas(n,k){
+  var f=false;
+  walkWhere(n,function(x){ if(x.type===k){ f=true; } });
+  return f;
+}
+function hasParen(n){
+  var f=false;
+  walkWhere(n,function(x){ if(x.paren){ f=true; } });
+  return f;
+}
+
+var LEVELS=[
+{
+  n:1, cat:'DML · Lectura', title:'Tu primer SELECT',
+  theory:'<p><strong>SELECT</strong> es el comando que <strong>consulta</strong> datos: no cambia nada, solo muestra. El asterisco (*) significa «todas las columnas». Y el punto y coma (<strong>;</strong>) cierra cada sentencia, como el punto final de una oración.</p><p>Tu tabla se llama <span class="mono">alumnos</span> y tiene 6 filas. Ejecutá la consulta que está escrita en la consola y mirá qué devuelve.</p>',
+  syntax:'SELECT * FROM nombre_tabla;',
+  syntaxNote:'* = todas las columnas · FROM indica de qué tabla leer',
+  brief:'La tabla <strong>alumnos</strong> ya está cargada en la base. Ejecutá una consulta que muestre <strong>todas las columnas y todas las filas</strong> de esa tabla. Ya te dejé el primer disparo cargado en la consola: pulsá <strong>Ejecutar</strong>.',
+  editor:'SELECT * FROM alumnos;',
+  objectives:[
+    { id:'o1',
+      text:'Mostrá todas las columnas y filas de la tabla «alumnos».',
+      check:function(){
+        var h=lastSel('alumnos');
+        return !!(h && h.stmt.items[0] && h.stmt.items[0].star && h.result.rows.length>0);
+      }
+    }
+  ],
+  bonusText:'Provocá un error a propósito: consultá una tabla que no existe (por ejemplo «alumno», sin la S) y mirá cómo te avisa el sistema. Los errores se leen, no se temen.',
+  bonusCheck:function(){ return state.lv.hadError; },
+  hint:'SELECT va primero; después el asterisco; después FROM y el nombre de la tabla.',
+  solution:'SELECT * FROM alumnos;'
+},
+{
+  n:2, cat:'DML · Lectura', title:'Elegir columnas',
+  theory:'<p>En lugar del asterisco podés <strong>elegir</strong> qué columnas ver, separadas por comas. El orden en que las escribís es el orden en que aparecen. Esta técnica se llama <strong>proyección</strong>.</p><p>Tu mundo ahora es el kiosco escolar: la tabla <span class="mono">productos</span> tiene 8 filas con id, producto, precio y stock.</p>',
+  syntax:'SELECT columna1, columna2 FROM tabla;',
+  syntaxNote:'Las columnas se separan con comas · el orden que escribís es el que ves',
+  brief:'Hay que pegar la lista de precios en la pared del kiosco. Mostrá <strong>solo</strong> las columnas <span class="mono">producto</span> y <span class="mono">precio</span> de la tabla <strong>productos</strong> — nada de asterisco esta vez.',
+  editor:'-- Escribí tu consulta y ejecutá con Ctrl + Enter\n',
+  objectives:[
+    { id:'o1',
+      text:'Traé solo «producto» y «precio» de «productos», sin usar *.',
+      check:function(){
+        var h=lastSel('productos');
+        if(!h){ return false; }
+        var it=h.stmt.items;
+        if(it.length===1 && it[0].star){ return false; }
+        var cols=it.map(function(x){ return x.col; });
+        return cols.indexOf('producto')>=0 && cols.indexOf('precio')>=0 && it.length===2 && h.result.rows.length>0;
+      }
+    }
+  ],
+  bonusText:'Adelanto del próximo nivel: mostrá todos los productos cuyo stock sea mayor a 50. La palabra mágica se llama WHERE.',
+  bonusCheck:function(){
+    var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='productos' && !!h.stmt.where; });
+    return arr.some(function(h){
+      var c=findCmp(h.stmt.where,'stock');
+      return c.some(function(x){ return (x.op==='>' && x.val>=50) || (x.op==='>=' && x.val>50); });
+    });
+  },
+  hint:'Las dos columnas van separadas por coma: SELECT producto, precio FROM productos;',
+  solution:'SELECT producto, precio FROM productos;'
+},
+{
+  n:3, cat:'DML · Filtro', title:'Filtrar con WHERE',
+  theory:'<p><strong>WHERE</strong> filtra filas: solo pasan las que cumplen la condición. Los operadores de comparación son: <span class="mono">=</span> igual · <span class="mono">&lt;&gt;</span> distinto · <span class="mono">&gt;</span> mayor · <span class="mono">&lt;</span> menor · <span class="mono">&gt;=</span> mayor o igual · <span class="mono">&lt;=</span> menor o igual.</p><p>Los textos van entre <strong>comillas simples</strong>: <span class="mono">\'Acción\'</span>. Los números, sin comillas: <span class="mono">8</span>.</p>',
+  syntax:'SELECT * FROM tabla\nWHERE columna >= valor;',
+  syntaxNote:'WHERE siempre va después del FROM',
+  brief:'El club de cine solo recomienda películas muy buenas. Mostrá <strong>todas las columnas</strong> de las películas cuya <strong>calificación sea mayor o igual a 8</strong>. La tabla es <span class="mono">peliculas</span> (10 filas, con decimales en calificación).',
+  editor:'-- Tabla: peliculas (id, titulo, anio, genero, calificacion)\n',
+  objectives:[
+    { id:'o1',
+      text:'Mostrá las películas con calificacion mayor o igual a 8 (todas las columnas).',
+      check:function(){
+        var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='peliculas' && !!h.stmt.where; });
+        for(var i=arr.length-1;i>=0;i--){
+          var h=arr[i];
+          var cs=findCmp(h.stmt.where,'calificacion');
+          var okOp=cs.some(function(x){ return (x.op==='>=' && x.val>=8) || (x.op==='>' && x.val>=7); });
+          if(okOp && setEq(valSet(h,'id'),[2,4,5,7,8,9])){ return true; }
+        }
+        return false;
+      }
+    }
+  ],
+  bonusText:'Con el operador <> (distinto): mostrá todas las películas que NO sean del género Animación.',
+  bonusCheck:function(){
+    var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='peliculas' && !!h.stmt.where; });
+    return arr.some(function(h){
+      return findCmp(h.stmt.where,'genero').some(function(x){ return x.op==='<>' || x.op==='!='; });
+    });
+  },
+  hint:'WHERE calificacion >= 8 — los números van sin comillas.',
+  solution:'SELECT * FROM peliculas WHERE calificacion >= 8;'
+},
+{
+  n:4, cat:'DML · Operadores lógicos', title:'AND, OR y paréntesis',
+  theory:'<p><strong>AND</strong> exige que se cumplan <em>todas</em> las condiciones a la vez. Con <strong>OR</strong> basta con que se cumpla <em>una</em>. Cuando mezclás los dos, SQL evalúa los AND primero: los <strong>paréntesis</strong> te dejan forzar el orden — usalos siempre que combines AND y OR.</p>',
+  syntax:"SELECT * FROM tabla\nWHERE condicion1 AND condicion2;\n\nSELECT * FROM tabla\nWHERE (condicion1 OR condicion2) AND condicion3;",
+  syntaxNote:"Los textos entre comillas simples: area = 'Sistemas'",
+  brief:'Recursos humanos pide dos informes sobre la tabla <span class="mono">empleados</span>:<br><strong>1)</strong> Mostrá <span class="mono">nombre</span>, <span class="mono">area</span> y <span class="mono">salario</span> de los empleados del area <strong>\'Sistemas\'</strong> que ganan <strong>más de 500000</strong> (AND).<br><strong>2)</strong> Mostrá los empleados del area <strong>\'Redes\'</strong> <strong>o</strong> con salario <strong>mayor a 550000</strong> (OR).',
+  editor:'-- Tabla: empleados (id, nombre, area, salario, edad)\n',
+  objectives:[
+    { id:'o1',
+      text:'Con AND: empleados de «Sistemas» con salario mayor a 500000.',
+      check:function(){
+        var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='empleados' && !!h.stmt.where; });
+        return arr.some(function(h){
+          var w=h.stmt.where;
+          if(!logicHas(w,'and')){ return false; }
+          var a=collectCols(w);
+          if(a.indexOf('area')<0 || a.indexOf('salario')<0){ return false; }
+          return setEq(valSet(h,'nombre'),['Carla Duarte','Nicolás Paz']);
+        });
+      }
+    },
+    { id:'o2',
+      text:'Con OR: empleados de «Redes» o con salario mayor a 550000.',
+      check:function(){
+        var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='empleados' && !!h.stmt.where; });
+        return arr.some(function(h){
+          var w=h.stmt.where;
+          if(!logicHas(w,'or')){ return false; }
+          var a=collectCols(w);
+          if(a.indexOf('area')<0 || a.indexOf('salario')<0){ return false; }
+          return setEq(valSet(h,'nombre'),['Nicolás Paz','Paula Soto']);
+        });
+      }
+    }
+  ],
+  bonusText:'Nivel experto: con paréntesis, encontrá a los empleados de Sistemas O Contabilidad que además tengan edad menor a 30.',
+  bonusCheck:function(){
+    var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='empleados' && !!h.stmt.where; });
+    return arr.some(function(h){
+      var w=h.stmt.where;
+      return logicHas(w,'and') && logicHas(w,'or') && hasParen(w) && collectCols(w).indexOf('edad')>=0;
+    });
+  },
+  hint:"1) WHERE area = 'Sistemas' AND salario > 500000   ·   2) WHERE area = 'Redes' OR salario > 550000",
+  solution:"SELECT nombre, area, salario FROM empleados\nWHERE area = 'Sistemas' AND salario > 500000;\n\nSELECT nombre, area, salario FROM empleados\nWHERE area = 'Redes' OR salario > 550000;"
+},
+{
+  n:5, cat:'DML · Escritura', title:'INSERT: sumar filas',
+  theory:'<p><strong>INSERT</strong> agrega filas nuevas. Conviene nombrar las columnas que vas a cargar (y cargar solo esas). Los textos siempre entre comillas simples. La columna <span class="mono">id</span> es clave primaria: si no la indicás, el sistema genera el número que sigue automáticamente.</p><p>Ojo: un INSERT agrega filas <em>completas</em> — no modifica las existentes (para eso está UPDATE, nivel 6).</p>',
+  syntax:"INSERT INTO socios (nombre, dni, localidad)\nVALUES ('Ana Pérez', 38222333, 'Neuquén');\n\n-- Varias filas de una vez:\nINSERT INTO socios (nombre, dni, localidad)\nVALUES ('A', 111, 'X'), ('B', 222, 'Y');",
+  syntaxNote:'Si no listás columnas, tenés que dar valores para TODAS, en orden',
+  brief:'La biblioteca del CPEM suma socios todos los días. <strong>Insertá un socio nuevo</strong> en la tabla <span class="mono">socios</span>: el nombre que quieras (¿el tuyo?), un DNI y una localidad. El id se genera solo. Después mirá el panel <strong>Base de datos en vivo</strong>: tu fila tiene que aparecer.',
+  editor:'-- Tabla: socios (id, nombre, dni, localidad)\n-- El id es automático si no lo indicás.\n',
+  objectives:[
+    { id:'o1',
+      text:'Insertá un socio nuevo: la tabla «socios» debe ganar al menos una fila.',
+      check:function(){
+        var hasIns=okHist().some(function(h){ return h.stmt.type==='insert' && h.stmt.table==='socios'; });
+        var db=state.db;
+        return !!(hasIns && db.socios && db.socios.rows.length>5);
+      }
+    }
+  ],
+  bonusText:'Eficiencia de bibliotecario: cargá dos socios nuevos en una sola sentencia INSERT (dos grupos de VALUES).',
+  bonusCheck:function(){
+    return okHist().some(function(h){ return h.stmt.type==='insert' && h.stmt.table==='socios' && h.stmt.values.length>=2; });
+  },
+  hint:"INSERT INTO socios (nombre, dni, localidad) VALUES ('Tu Nombre', 45678123, 'Neuquén');",
+  solution:"INSERT INTO socios (nombre, dni, localidad)\nVALUES ('Nuevo Socio', 45678123, 'Neuquén');"
+},
+{
+  n:6, cat:'DML · Escritura', title:'UPDATE y DELETE',
+  theory:'<p><strong>UPDATE</strong> modifica filas existentes: <span class="mono">SET</span> define qué columnas cambian y <span class="mono">WHERE</span> decide a cuáles filas les afecta. <strong>Sin WHERE se cambian TODAS las filas</strong> — el error más caro de la historia de la informática.</p><p><strong>DELETE</strong> elimina filas completas (no columnas); también usa WHERE.</p>',
+  syntax:'UPDATE tabla SET columna = valor\nWHERE columna = valor;\n\nDELETE FROM tabla WHERE columna = valor;',
+  syntaxNote:'UPDATE = cambiar valores · DELETE = quitar filas enteras',
+  brief:'Dos parches urgentes en el inventario del laboratorio:<br><strong>1)</strong> El precio de la «Notebook 3» quedó mal cargado: <strong>actualizalo a 950000</strong>.<br><strong>2)</strong> La «Impresora vieja» fue dada de baja: <strong>eliminá su fila</strong>.<br>Ambos con su WHERE correspondiente, obvio.',
+  editor:'-- Tabla: inventario (id, equipo, estado, precio)\n',
+  objectives:[
+    { id:'o1',
+      text:'Actualizá el precio de la Notebook 3 a 950000 (con WHERE).',
+      check:function(){
+        var db=state.db;
+        if(!db.inventario){ return false; }
+        var row=null;
+        db.inventario.rows.forEach(function(r){ if(r.equipo==='Notebook 3'){ row=r; } });
+        if(!row || row.precio!==950000){ return false; }
+        return okHist().some(function(h){ return h.stmt.type==='update' && h.stmt.table==='inventario' && !!h.stmt.where; });
+      }
+    },
+    { id:'o2',
+      text:'Eliminá la fila de la Impresora vieja (con WHERE).',
+      check:function(){
+        var db=state.db;
+        if(!db.inventario){ return false; }
+        var still=false;
+        db.inventario.rows.forEach(function(r){ if(r.equipo==='Impresora vieja'){ still=true; } });
+        if(still){ return false; }
+        return okHist().some(function(h){ return h.stmt.type==='delete' && h.stmt.table==='inventario' && !!h.stmt.where; });
+      }
+    }
+  ],
+  bonusText:'Una sentencia UPDATE que toque varias filas a la vez: poné el estado «revisar» en todos los equipos con precio menor a 100000.',
+  bonusCheck:function(){
+    var arr=okHist().filter(function(h){ return h.stmt.type==='update' && h.stmt.table==='inventario' && !!h.stmt.where; });
+    return arr.some(function(h){
+      var setEstado=false;
+      h.stmt.sets.forEach(function(s){ if(s[0]==='estado'){ setEstado=true; } });
+      if(!setEstado){ return false; }
+      var c=findCmp(h.stmt.where,'precio');
+      return c.some(function(x){ return x.op==='<'; });
+    });
+  },
+  hint:"1) UPDATE inventario SET precio = 950000 WHERE equipo = 'Notebook 3';   ·   2) DELETE FROM inventario WHERE equipo = 'Impresora vieja';",
+  solution:"UPDATE inventario SET precio = 950000\nWHERE equipo = 'Notebook 3';\n\nDELETE FROM inventario\nWHERE equipo = 'Impresora vieja';"
+},
+{
+  n:7, cat:'DDL · Estructura', title:'CREATE TABLE',
+  theory:'<p><strong>CREATE TABLE</strong> define una tabla nueva: nombre, columnas y <strong>tipo de dato</strong> de cada una. Los tipos que vas a usar: <span class="mono">INTEGER</span> enteros, <span class="mono">REAL</span> decimales, <span class="mono">TEXT</span> texto.</p><p>La <strong>clave primaria</strong> (<span class="mono">PRIMARY KEY</span>) identifica cada fila sin repetirse — casi siempre es la columna <span class="mono">id</span>. Esto es DDL puro: estás construyendo el mueble antes de guardar nada adentro.</p><p>Cada columna también acepta <strong>restricciones</strong>: <span class="mono">NOT NULL</span> (obligatoria, no acepta vacíos), <span class="mono">UNIQUE</span> (sin valores repetidos), <span class="mono">DEFAULT valor</span> (si no la cargás, usa ese valor) y <span class="mono">AUTOINCREMENT</span> sobre la clave primaria numérica (el id se genera solo).</p>',
+  syntax:'CREATE TABLE materias (\n  id     INTEGER PRIMARY KEY AUTOINCREMENT,\n  nombre TEXT NOT NULL,\n  horas  INTEGER DEFAULT 1\n);',
+  syntaxNote:'Cada columna lleva su tipo y puede llevar restricciones · PRIMARY KEY marca el identificador único',
+  brief:'Te toca ser carpintero. <strong>Creá</strong> la tabla <span class="mono">materias</span> con estas columnas: <span class="mono">id</span> (INTEGER, PRIMARY KEY), <span class="mono">nombre</span> (TEXT) y <span class="mono">horas</span> (INTEGER). Las restricciones extra (NOT NULL, AUTOINCREMENT, DEFAULT…) son bienvenidas. Después <strong>insertá al menos 2 materias</strong> que cursás este año.',
+  editor:'-- Primero CREATE, después los INSERT.\n-- Mirá el panel de la derecha cuando termine.\n',
+  objectives:[
+    { id:'o1',
+      text:'Creá «materias» con id (INTEGER PRIMARY KEY), nombre (TEXT) y horas (INTEGER).',
+      check:function(){
+        var db=state.db;
+        if(!db.materias){ return false; }
+        var id=null, no=null, ho=null;
+        db.materias.columns.forEach(function(x){
+          if(x.name==='id'){ id=x; }
+          if(x.name==='nombre'){ no=x; }
+          if(x.name==='horas'){ ho=x; }
+        });
+        return !!(id && id.pk && id.type==='INTEGER' && no && no.type==='TEXT' && ho && ho.type==='INTEGER');
+      }
+    },
+    { id:'o2',
+      text:'Insertá 2 materias o más en la tabla nueva.',
+      check:function(){
+        var db=state.db;
+        var hasIns=okHist().some(function(h){ return h.stmt.type==='insert' && h.stmt.table==='materias'; });
+        return !!(db.materias && db.materias.rows.length>=2 && hasIns);
+      }
+    }
+  ],
+  bonusText:'Sos el arquitecto de la base: creá una tabla extra con el nombre y las columnas que quieras (que no exista ya) y cargale una fila.',
+  bonusCheck:function(){
+    var reserved={borrador:1,archivos:1,materias:1};
+    var arr=okHist().filter(function(h){ return h.stmt.type==='create' && !reserved[h.stmt.table]; });
+    return arr.some(function(h){
+      var t=state.db[h.stmt.table];
+      return !!(t && t.rows.length>=1);
+    });
+  },
+  hint:'Respetá el orden: nombre de columna, tipo de dato, restricciones opcionales, coma. La PRIMARY KEY va después del tipo de id.',
+  solution:"CREATE TABLE materias (\n  id     INTEGER PRIMARY KEY AUTOINCREMENT,\n  nombre TEXT NOT NULL,\n  horas  INTEGER\n);\n\nINSERT INTO materias (nombre, horas) VALUES ('Base de Datos', 6);\nINSERT INTO materias (nombre, horas) VALUES ('Programación', 8);"
+},
+{
+  n:8, cat:'DDL · Estructura', title:'TRUNCATE y DROP',
+  theory:'<p>Tres formas distintas de "borrar", y no son lo mismo:</p><p><span class="mono">DELETE FROM tabla;</span> borra filas (una, varias o todas) — la estructura sigue existiendo. Es DML.<br><span class="mono">TRUNCATE TABLE tabla;</span> vacía la tabla <em>entera</em> de un saque; la estructura queda intacta, lista para recibir datos. Es DDL.<br><span class="mono">DROP TABLE tabla;</span> borra filas <strong>y</strong> estructura: la tabla deja de existir. Es DDL.</p>',
+  syntax:'TRUNCATE TABLE borrador;   -- vacía, la tabla sigue existiendo\nDROP TABLE borrador;       -- la tabla desaparece del todo',
+  syntaxNote:'TRUNCATE = vaciar una botella · DROP = tirar la botella a la basura',
+  brief:'La tabla <span class="mono">borrador</span> está llena de basura digital.<br><strong>1)</strong> Vaciala con <strong>TRUNCATE</strong>.<br><strong>2)</strong> Ya vacía, <strong>eliminala del todo</strong> con <strong>DROP</strong> — en ese orden: primero el contenido, después el mueble.<br>Mirá el panel en vivo en cada paso: primero verás la tabla sin filas, después directamente tachada como eliminada.',
+  editor:'-- Tabla: borrador (id, contenido) — 5 filas de basura\n-- Pista: son DOS sentencias, en ese orden.\n',
+  objectives:[
+    { id:'o1',
+      text:'Vacía «borrador» con TRUNCATE (antes del DROP).',
+      check:function(){
+        return okHist().some(function(h){ return h.stmt.type==='truncate' && h.stmt.table==='borrador'; });
+      }
+    },
+    { id:'o2',
+      text:'Eliminá la tabla con DROP TABLE.',
+      check:function(){
+        var h=okHist();
+        var ti=-1, di=-1;
+        h.forEach(function(x,ix){
+          if(x.stmt.type==='truncate' && x.stmt.table==='borrador' && ti<0){ ti=ix; }
+          if(x.stmt.type==='drop' && x.stmt.table==='borrador' && di<0){ di=ix; }
+        });
+        return ti>=0 && di>ti && !state.db.borrador;
+      }
+    }
+  ],
+  bonusText:'¿Te arrepentiste? Reconstruila: creá de nuevo la tabla «borrador» (con las columnas que quieras) e insertale una fila.',
+  bonusCheck:function(){
+    var db=state.db;
+    var recreated=okHist().some(function(h){ return h.stmt.type==='create' && h.stmt.table==='borrador'; });
+    return !!(db.borrador && db.borrador.rows.length>=1 && recreated);
+  },
+  hint:'Primero TRUNCATE TABLE borrador; — después DROP TABLE borrador;',
+  solution:'TRUNCATE TABLE borrador;\nDROP TABLE borrador;'
+},
+{
+  n:9, cat:'DML · Agregación', title:'ORDER BY y GROUP BY',
+  theory:'<p><strong>ORDER BY</strong> ordena el resultado: <span class="mono">ASC</span> ascendente (es el valor por defecto) y <span class="mono">DESC</span> descendente.</p><p><strong>GROUP BY</strong> junta las filas que comparten un mismo valor y permite calcular por grupo con las funciones de agregación: <span class="mono">COUNT</span> cuenta, <span class="mono">SUM</span> suma, <span class="mono">AVG</span> promedia, <span class="mono">MIN</span>/<span class="mono">MAX</span> dan los extremos. Con <strong>HAVING</strong> filtrás los grupos <em>ya calculados</em> (WHERE filtra filas; HAVING filtra grupos).</p>',
+  syntax:'SELECT vendedor, SUM(monto) FROM ventas\nGROUP BY vendedor\nHAVING SUM(monto) > 200000\nORDER BY SUM(monto) DESC;',
+  syntaxNote:'WHERE filtra filas ANTES de agrupar · HAVING filtra grupos DESPUÉS',
+  brief:'Planilla de ventas de la tienda escolar, tabla <span class="mono">ventas</span> (12 filas, 4 vendedores):<br><strong>1)</strong> Mostrá todas las ventas ordenadas por <span class="mono">monto</span> de <strong>mayor a menor</strong>.<br><strong>2)</strong> Calculá cuánto facturó <strong>cada vendedor</strong>: agrupá por vendedor y sumá el monto.',
+  editor:'-- Tabla: ventas (id, vendedor, producto, monto)\n',
+  objectives:[
+    { id:'o1',
+      text:'Ventas ordenadas por monto descendente (ORDER BY … DESC).',
+      check:function(){
+        var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='ventas' && !!h.stmt.orderBy; });
+        return arr.some(function(h){
+          var ob=h.stmt.orderBy[0];
+          return ob.col==='monto' && ob.dir==='desc' && h.result.rows.length>0;
+        });
+      }
+    },
+    { id:'o2',
+      text:'Total facturado por vendedor: GROUP BY vendedor con SUM(monto).',
+      check:function(){
+        var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='ventas' && !!h.stmt.groupBy; });
+        return arr.some(function(h){
+          if(h.stmt.groupBy.indexOf('vendedor')<0){ return false; }
+          var hasSum=h.stmt.items.some(function(it){ return it.agg && it.agg.fn==='SUM' && it.agg.arg==='monto'; });
+          return hasSum && h.result.rows.length>=3;
+        });
+      }
+    }
+  ],
+  bonusText:'Con HAVING: dejá solo los vendedores cuyo total facturado supere los 200000.',
+  bonusCheck:function(){
+    return okHist().some(function(h){ return h.stmt.type==='select' && h.stmt.from==='ventas' && !!h.stmt.having; });
+  },
+  hint:'1) SELECT * FROM ventas ORDER BY monto DESC; · 2) SELECT vendedor, SUM(monto) FROM ventas GROUP BY vendedor;',
+  solution:'SELECT * FROM ventas ORDER BY monto DESC;\n\nSELECT vendedor, SUM(monto) AS total\nFROM ventas\nGROUP BY vendedor;'
+},
+{
+  n:10, cat:'Todo junto', title:'Desafío final',
+  theory:'<p>Todo lo aprendido, en una sola base. Antes de escribir, pensá el plan: <strong>1)</strong> ¿qué tabla uso? <strong>2)</strong> ¿qué filas sobreviven al WHERE? <strong>3)</strong> ¿agrego, cambio o agrupo algo? <strong>4)</strong> ¿en qué orden muestro el resultado?</p><p>Las cuatro misiones se validan por separado: podés resolverlas en cualquier orden. Cuando las cuatro estén, te llevás el certificado del curso.</p>',
+  syntax:'-- Usá todo: SELECT con WHERE + AND + ORDER BY,\n-- INSERT, UPDATE, GROUP BY con COUNT.\n-- Tabla: estudiantes (id, nombre, comision, nota, regular)\n-- regular: 1 = sí, 0 = no',
+  syntaxNote:'Respirá hondo y leé cada misión dos veces antes de tipear',
+  brief:'Base final: <span class="mono">estudiantes</span> (10 filas, dos comisiones).<br><strong>1)</strong> Listá <span class="mono">nombre</span> y <span class="mono">nota</span> de la comisión <strong>\'4B\'</strong> con <strong>nota &gt;= 6</strong>, ordenados por nota <strong>descendente</strong>.<br><strong>2)</strong> <strong>Insertá</strong> un estudiante nuevo (nombre, comisión y nota).<br><strong>3)</strong> Los de <strong>\'5B\'</strong> con <strong>nota &gt;= 7</strong> quedan regulares: poné su <span class="mono">regular</span> en <strong>1</strong> (una sola sentencia UPDATE con AND).<br><strong>4)</strong> Mostrá <strong>cuántos estudiantes hay por comisión</strong> (GROUP BY + COUNT).',
+  editor:'-- Último nivel. Todo lo que aprendiste sirve acá.\n',
+  objectives:[
+    { id:'o1',
+      text:'4B con nota >= 6: nombre y nota, ordenados por nota DESC.',
+      check:function(){
+        var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='estudiantes' && !!h.stmt.where && !!h.stmt.orderBy; });
+        return arr.some(function(h){
+          var w=h.stmt.where;
+          if(!logicHas(w,'and')){ return false; }
+          if(collectCols(w).indexOf('comision')<0){ return false; }
+          var c=findCmp(w,'nota');
+          var okNota=c.some(function(x){ return (x.op==='>=' && x.val>=6) || (x.op==='>' && x.val>=5.9); });
+          if(!okNota){ return false; }
+          var ob=h.stmt.orderBy[0];
+          if(!(ob.col==='nota' && ob.dir==='desc')){ return false; }
+          return setEq(valSet(h,'nombre'),['Valentina Gómez','Mateo Fernández','Franco Molina']);
+        });
+      }
+    },
+    { id:'o2',
+      text:'Insertá un estudiante nuevo.',
+      check:function(){
+        var db=state.db;
+        var hasIns=okHist().some(function(h){ return h.stmt.type==='insert' && h.stmt.table==='estudiantes'; });
+        return !!(db.estudiantes && db.estudiantes.rows.length>10 && hasIns);
+      }
+    },
+    { id:'o3',
+      text:'Regularizá a los 5B con nota >= 7 (UPDATE con AND).',
+      check:function(){
+        var db=state.db;
+        if(!db.estudiantes){ return false; }
+        var target=db.estudiantes.rows.filter(function(r){ return r.comision==='5B' && toNum(r.nota)>=7; });
+        if(target.length===0){ return false; }
+        var allReg=target.every(function(r){ return r.regular===1; });
+        if(!allReg){ return false; }
+        return okHist().some(function(h){
+          if(h.stmt.type!=='update' || h.stmt.table!=='estudiantes' || !h.stmt.where){ return false; }
+          if(!logicHas(h.stmt.where,'and')){ return false; }
+          var setReg=false;
+          h.stmt.sets.forEach(function(s){ if(s[0]==='regular'){ setReg=true; } });
+          return setReg;
+        });
+      }
+    },
+    { id:'o4',
+      text:'Cuántos estudiantes hay por comisión (GROUP BY + COUNT).',
+      check:function(){
+        var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='estudiantes' && !!h.stmt.groupBy; });
+        return arr.some(function(h){
+          if(h.stmt.groupBy.indexOf('comision')<0){ return false; }
+          var hasCount=h.stmt.items.some(function(it){ return it.agg && it.agg.fn==='COUNT'; });
+          return hasCount && h.result.rows.length>=3;
+        });
+      }
+    }
+  ],
+  bonusText:'Orden doble: mostrá los estudiantes ordenados por comisión ascendente y, dentro de cada comisión, por nota descendente.',
+  bonusCheck:function(){
+    var arr=okHist().filter(function(h){ return h.stmt.type==='select' && h.stmt.from==='estudiantes' && !!h.stmt.orderBy; });
+    return arr.some(function(h){
+      var ob=h.stmt.orderBy;
+      return ob.length>=2 && ob[0].col==='comision' && ob[1].col==='nota' && ob[1].dir==='desc';
+    });
+  },
+  hint:"Cuatro sentencias independientes: un SELECT con WHERE ... AND ... ORDER BY nota DESC; un INSERT; un UPDATE con SET regular = 1 WHERE comision = '5B' AND nota >= 7; un SELECT con COUNT(*) GROUP BY comision.",
+  solution:"SELECT nombre, nota FROM estudiantes\nWHERE comision = '4B' AND nota >= 6\nORDER BY nota DESC;\n\nINSERT INTO estudiantes (nombre, comision, nota)\nVALUES ('Nuevo Ingreso', '4B', 7.0);\n\nUPDATE estudiantes SET regular = 1\nWHERE comision = '5B' AND nota >= 7;\n\nSELECT comision, COUNT(*) AS cantidad\nFROM estudiantes\nGROUP BY comision;"
+}
+];
+
+function levelWorld(L){
+  var db={};
+  var worlds={
+    1:{ alumnos:{cols:[['id','INTEGER',true],['nombre','TEXT'],['apellido','TEXT'],['comision','TEXT']],
+        rows:[[1,'Valentina','Gómez','4B'],[2,'Mateo','Fernández','4B'],[3,'Lucía','Sáez','4A'],[4,'Tomás','Villanueva','4B'],[5,'Julieta','Ríos','4C'],[6,'Benjamín','Ocampo','4A']]} },
+    2:{ productos:{cols:[['id','INTEGER',true],['producto','TEXT'],['precio','INTEGER'],['stock','INTEGER']],
+        rows:[[1,'Lapicera azul',350,120],[2,'Cuaderno 48 hojas',1200,45],[3,'Regla 30 cm',800,60],[4,'Mochila escolar',18500,12],[5,'Calculadora científica',24000,8],[6,'Block de hojas',2100,30],[7,'Cartuchera',4300,25],[8,'Marcador negro',600,90]]} },
+    3:{ peliculas:{cols:[['id','INTEGER',true],['titulo','TEXT'],['anio','INTEGER'],['genero','TEXT'],['calificacion','REAL']],
+        rows:[[1,'Rápidos y Furiosos X',2023,'Acción',6.5],[2,'Oppenheimer',2023,'Drama',8.4],[3,'Barbie',2023,'Comedia',7.0],[4,'Intensa Mente 2',2024,'Animación',8.1],[5,'Duna: Parte Dos',2024,'Ciencia ficción',8.6],[6,'Titanic',1997,'Romance',7.9],[7,'El Padrino',1972,'Drama',9.2],[8,'Coco',2017,'Animación',8.4],[9,'Matrix',1999,'Ciencia ficción',8.7],[10,'Cars 3',2017,'Animación',6.8]]} },
+    4:{ empleados:{cols:[['id','INTEGER',true],['nombre','TEXT'],['area','TEXT'],['salario','INTEGER'],['edad','INTEGER']],
+        rows:[[1,'Carla Duarte','Sistemas',520000,29],[2,'Nicolás Paz','Sistemas',610000,35],[3,'Rosa Mendoza','Contabilidad',480000,41],[4,'Julián Arias','Contabilidad',395000,27],[5,'Elena Cruz','Administración',380000,45],[6,'Marcos Lima','Sistemas',470000,24],[7,'Paula Soto','Redes',505000,31],[8,'Diego Vera','Administración',410000,52],[9,'Ana Ruiz','Contabilidad',540000,26]]} },
+    5:{ socios:{cols:[['id','INTEGER',true],['nombre','TEXT'],['dni','INTEGER'],['localidad','TEXT']],
+        rows:[[1,'Marta Ibarra',30123456,'Neuquén'],[2,'Lucas Ortega',35444777,'Centenario'],[3,'Rocío Álvarez',41022334,'Neuquén'],[4,'Hernán Sosa',28777666,'Plottier'],[5,'Agustina Vega',44999001,'Cipolletti']]} },
+    6:{ inventario:{cols:[['id','INTEGER',true],['equipo','TEXT'],['estado','TEXT'],['precio','INTEGER']],
+        rows:[[1,'PC Escritorio 1','operativo',320000],[2,'Notebook 3','operativo',350000],[3,'Impresora vieja','fuera de servicio',45000],[4,'Proyector Aula 12','operativo',180000],[5,'Switch de red','operativo',89000],[6,'Monitor 24 pulgadas','operativo',130000]]} },
+    7:{},
+    8:{ borrador:{cols:[['id','INTEGER',true],['contenido','TEXT']],
+        rows:[[1,'prueba_01'],[2,'prueba_02'],[3,'borrador_informe'],[4,'tmp_1234'],[5,'viejo_backup']]},
+       archivos:{cols:[['id','INTEGER',true],['nombre','TEXT'],['tam_kb','INTEGER']],
+        rows:[[1,'acta_septiembre.pdf',240],[2,'listado_4b.csv',18],[3,'logo_cpem17.png',96],[4,'planilla_notas.ods',57]]} },
+    9:{ ventas:{cols:[['id','INTEGER',true],['vendedor','TEXT'],['producto','TEXT'],['monto','INTEGER']],
+        rows:[[1,'Sofía','Cuadernos x100',98000],[2,'Luis','Lapiceras x50',75000],[3,'Marta','Mochilas',68000],[4,'Sofía','Marcadores x30',87000],[5,'Diego','Carpetas',52000],[6,'Luis','Blocks de hojas',62000],[7,'Marta','Cartucheras',74000],[8,'Sofía','Calculadoras',125000],[9,'Diego','Reglas',47000],[10,'Luis','Mochilas',108000],[11,'Marta','Lapiceras x50',56000],[12,'Diego','Blocks',43000]]} },
+    10:{ estudiantes:{cols:[['id','INTEGER',true],['nombre','TEXT'],['comision','TEXT'],['nota','REAL'],['regular','INTEGER']],
+        rows:[[1,'Valentina Gómez','4B',8.5,1],[2,'Mateo Fernández','4B',6.0,1],[3,'Lucía Sáez','4A',9.0,1],[4,'Tomás Villanueva','4B',4.5,0],[5,'Julieta Ríos','5B',7.0,0],[6,'Benjamín Ocampo','4A',5.5,0],[7,'Camila Torres','5B',8.0,0],[8,'Franco Molina','4B',7.5,1],[9,'Delfina Castro','5B',6.5,0],[10,'Ignacio Peña','4A',3.0,0]]} }
+  };
+  var w=worlds[L.n]||{};
+  Object.keys(w).forEach(function(name){
+    var t=w[name];
+    db[name]={
+      name:name,
+      columns:t.cols.map(function(c){ return {name:c[0],type:c[1],pk:!!c[2],notNull:false,unique:false,autoInc:false,def:undefined}; }),
+      rows:t.rows.map(function(r){
+        var o={};
+        t.cols.forEach(function(c,ix){ o[c[0]]=r[ix]; });
+        return o;
+      })
+    };
+  });
+  return db;
+}
+
+var state={
+  view:'manual', level:1, db:null, lv:null,
+  worlds:{}, levelResults:{}, levelHist:{}, levelFlags:{}, levelEditor:{}, levelSeen:{}
+};
+
+function ensureWorld(n){
+  if(!state.worlds[n]){ state.worlds[n]=levelWorld(LEVELS[n-1]); }
+  state.db=state.worlds[n];
+  if(!state.levelHist[n]){ state.levelHist[n]=[]; }
+  if(!state.levelFlags[n]){ state.levelFlags[n]={hadError:false}; }
+  if(!state.levelSeen[n]){
+    state.levelSeen[n]={};
+    Object.keys(state.db).forEach(function(k){ state.levelSeen[n][k]=1; });
+  }
+  state.lv={
+    hist: state.levelHist[n],
+    hadError: state.levelFlags[n].hadError,
+    tablesSeen: state.levelSeen[n]
+  };
+}
+
+function restoreWorld(n){
+  state.worlds[n]=levelWorld(LEVELS[n-1]);
+  state.db=state.worlds[n];
+  state.levelHist[n]=[];
+  state.levelFlags[n]={hadError:false};
+  state.levelSeen[n]={};
+  Object.keys(state.db).forEach(function(k){ state.levelSeen[n][k]=1; });
+  state.lv={ hist: state.levelHist[n], hadError:false, tablesSeen: state.levelSeen[n] };
+  delete state.levelResults[n];
+}
+
+function toast(msg,kind){
+  var el=document.createElement('div');
+  el.className='toast'+(kind ? ' '+kind : '');
+  var ico=(kind==='amber') ? 'star' : 'check-circle-2';
+  el.innerHTML='<i data-lucide="'+ico+'"></i><span>'+msg+'</span>';
+  $('#toasts').appendChild(el);
+  icons();
+  setTimeout(function(){
+    el.style.transition='opacity .3s, transform .3s';
+    el.style.opacity='0';
+    el.style.transform='translateY(8px)';
+    setTimeout(function(){ if(el.parentNode){ el.parentNode.removeChild(el); } },320);
+  },3600);
+}
+function openModal(html,opts){
+  opts=opts||{};
+  var root=$('#modalRoot');
+  root.className='modal-root open';
+  root.innerHTML='<div class="modal-backdrop"></div><div class="modal-card">'+html+'</div>';
+  if(opts.dismiss!==false){
+    root.querySelector('.modal-backdrop').addEventListener('click',closeModal);
+  }
+  return root;
+}
+function closeModal(){
+  var r=$('#modalRoot');
+  r.className='modal-root';
+  r.innerHTML='';
+}
+function confetti(){
+  var colors=['#136A47','#B36A1D','#1C1A14','#C9A227','#7A9E7E'];
+  var wrap=document.createElement('div');
+  wrap.className='confetti';
+  for(var i=0;i<36;i++){
+    var p=document.createElement('i');
+    p.style.left=(Math.random()*100)+'vw';
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.width=(4+Math.random()*5)+'px';
+    p.style.height=(9+Math.random()*9)+'px';
+    p.style.setProperty('--r',(Math.random()*720-360)+'deg');
+    p.style.animationDelay=(Math.random()*0.4)+'s';
+    p.style.animationDuration=(1+Math.random()*0.9)+'s';
+    wrap.appendChild(p);
+  }
+  document.body.appendChild(wrap);
+  setTimeout(function(){ wrap.remove(); },2400);
+}
+
+function tableHTML(cols,rows,anim){
+  var numCol=cols.map(function(col,ix){
+    return rows.length>0 && rows.every(function(r){ return r[ix]===null || typeof r[ix]==='number'; });
+  });
+  var h='<div class="tbl-wrap"><table class="rtable"><thead><tr><th class="rownum">#</th>';
+  cols.forEach(function(c,i){
+    h+='<th'+(numCol[i]?' class="num"':'')+'>'+esc(c)+'</th>';
+  });
+  h+='</tr></thead><tbody>';
+  rows.forEach(function(r,ix){
+    h+='<tr'+(anim ? (' class="anim" style="--d:'+Math.min(ix*38,420)+'ms"') : '')+'><td class="rownum">'+(ix+1)+'</td>';
+    r.forEach(function(v,i){
+      if(v===null || v===undefined){ h+='<td class="null">NULL</td>'; }
+      else{ h+='<td'+(numCol[i]?' class="num"':'')+'>'+esc(String(v))+'</td>'; }
+    });
+    h+='</tr>';
+  });
+  if(rows.length===0){
+    h+='<tr><td class="rownum">·</td><td class="null" colspan="'+cols.length+'">— sin filas —</td></tr>';
+  }
+  h+='</tbody></table></div>';
+  return h;
+}
+
+function buildNav(){
+  var nav=$('#nav');
+  var html='<div class="nav-sec">Estudiar</div>';
+  html+='<a class="nav-item" data-view="manual"><span class="nav-num"><i data-lucide="book-open"></i></span><span class="nav-title">Manual teórico</span><span class="nav-state"></span></a>';
+  html+='<div class="nav-sec">Práctica · 10 niveles</div>';
+  LEVELS.forEach(function(L){
+    html+='<a class="nav-item" data-level="'+L.n+'">'
+      +'<span class="nav-num">'+pad2(L.n)+'</span>'
+      +'<span class="nav-title">'+esc(L.title)+'</span>'
+      +'<span class="nav-state"></span></a>';
+  });
+  nav.innerHTML=html;
+  Array.prototype.forEach.call(nav.querySelectorAll('.nav-item'),function(el){
+    el.addEventListener('click',function(){
+      if(el.getAttribute('data-view')){ go('manual'); return; }
+      var n=parseInt(el.getAttribute('data-level'),10);
+      if(n>store.data.unlocked){ toast('Completá el nivel anterior para desbloquear este.','amber'); return; }
+      go('level',n);
+    });
+  });
+}
+function updateNav(){
+  Array.prototype.forEach.call(document.querySelectorAll('.nav-item'),function(el){
+    el.classList.remove('active','done','locked');
+    var st=el.querySelector('.nav-state');
+    if(st){ st.innerHTML=''; }
+    if(el.getAttribute('data-view')==='manual'){
+      if(state.view==='manual'){ el.classList.add('active'); }
+      return;
+    }
+    var n=parseInt(el.getAttribute('data-level'),10);
+    if(n>store.data.unlocked){
+      el.classList.add('locked');
+      if(st){ st.innerHTML='<i data-lucide="lock"></i>'; }
+    } else if(store.isDone(n)){
+      el.classList.add('done');
+      if(st){ st.innerHTML='<i data-lucide="check"></i>'; }
+    }
+    if(state.view==='level' && state.level===n){ el.classList.add('active'); }
+  });
+  icons();
+}
+function updateHUD(){
+  $('#rankName').textContent=rankName(store.data.xp);
+  $('#rankXp').textContent=store.data.xp+' XP';
+  var track=$('#xpTrack');
+  track.innerHTML='';
+  for(var i=1;i<=10;i++){
+    (function(idx){
+      var s=document.createElement('span');
+      s.className='xp-seg'+(store.isDone(idx)?' full':'');
+      s.title='Nivel '+idx+': '+(store.isDone(idx)?'completado':(idx<=store.data.unlocked?'disponible':'bloqueado'));
+      s.addEventListener('click',function(){
+        if(idx<=store.data.unlocked){ go('level',idx); }
+        else{ toast('Ese nivel todavía está bloqueado.','amber'); }
+      });
+      track.appendChild(s);
+    })(i);
+  }
+}
+
+function go(view,n){
+  state.view=view;
+  if(view==='level'){
+    state.level=n;
+    ensureWorld(n);
+    renderLevel();
+  } else {
+    $('#viewManual').classList.remove('hidden');
+    $('#viewLevel').classList.add('hidden');
+  }
+  updateNav();
+  window.scrollTo(0,0);
+}
+
+function defaultResultsHTML(){
+  return '<div class="empty-state"><i data-lucide="corner-down-right"></i><span>Todavía no ejecutaste nada en este nivel. Escribí una consulta y pulsá <strong>Ejecutar</strong> — el resultado aparece siempre como tabla.</span></div>';
+}
+function showResultsFor(n){
+  var b=$('#resultsBody');
+  if(!b){ return; }
+  b.innerHTML=(state.levelResults[n]!==undefined) ? state.levelResults[n] : defaultResultsHTML();
+}
+function setResults(html){
+  state.levelResults[state.level]=html;
+  var b=$('#resultsBody');
+  if(b){ b.innerHTML=html; }
+}
+
+function renderLevel(){
+  var L=LEVELS[state.level-1], n=L.n;
+  var done=store.isDone(n);
+  var objs=store.objs(n);
+  var bonus=store.bonus(n);
+
+  $('#lvNum').textContent=pad2(n);
+  $('#lvKicker').textContent=L.cat+' · Nivel '+n+' de 10';
+  $('#lvTitle').textContent=L.title;
+  if(done){ $('#lvDoneBadge').classList.remove('hidden'); } else { $('#lvDoneBadge').classList.add('hidden'); }
+
+  $('#lvTheory').innerHTML=L.theory;
+  $('#lvSyntax').textContent=L.syntax;
+  var sn=$('#lvSyntaxNote');
+  sn.textContent=L.syntaxNote||'';
+  if(L.syntaxNote){ sn.classList.remove('hidden'); } else { sn.classList.add('hidden'); }
+
+  $('#lvBrief').innerHTML=L.brief;
+
+  var ol=$('#objList');
+  ol.innerHTML='';
+  L.objectives.forEach(function(o){
+    var li=document.createElement('li');
+    li.id='obj-'+o.id;
+    if(objs[o.id]){ li.className='done'; }
+    li.innerHTML='<span class="obj-box"><i data-lucide="check"></i></span><span>'+o.text+'</span>';
+    ol.appendChild(li);
+  });
+
+  $('#bonusText').textContent=L.bonusText;
+  if(bonus){ $('#bonusRow').classList.add('done'); } else { $('#bonusRow').classList.remove('done'); }
+
+  $('#hintBox').innerHTML='<strong>Pista:</strong> '+esc(L.hint);
+  $('#solCode').textContent=L.solution;
+  $('#hintBox').classList.add('hidden');
+  $('#solBox').classList.add('hidden');
+
+  var savedEd=state.levelEditor[n];
+  $('#ed').value=(savedEd===undefined || savedEd===null) ? (L.editor||'') : savedEd;
+  fitEditor();
+
+  showResultsFor(n);
+
+  $('#viewLevel').classList.remove('hidden');
+  $('#viewManual').classList.add('hidden');
+
+  renderLive();
+  icons();
+  $('#ed').focus();
+}
+
+function colTags(c){
+  var t='';
+  if(c.pk){ t+=' <span class="pk" title="clave primaria">PK</span>'; }
+  if(c.autoInc){ t+=' <span class="pk" title="autoincremental: el id se genera solo">AI</span>'; }
+  if(c.notNull){ t+=' <span class="pk" title="NOT NULL: obligatoria">NN</span>'; }
+  if(c.unique){ t+=' <span class="pk" title="UNIQUE: sin valores repetidos">UQ</span>'; }
+  if(c.def!==undefined){ t+=' <span class="pk" title="valor por defecto">DEF</span>'; }
+  return t;
+}
+
+function renderLive(){
+  var body=$('#liveBody');
+  if(!body || !state.lv){ return; }
+  var L=LEVELS[state.level-1];
+  var db=state.db;
+  var world=levelWorld(L);
+  var order=[], seen={};
+  Object.keys(world).forEach(function(k){ if(db[k]){ order.push(k); seen[k]=1; } });
+  Object.keys(db).forEach(function(k){ if(!seen[k]){ order.push(k); seen[k]=1; } });
+  var gone=[];
+  Object.keys(state.lv.tablesSeen).forEach(function(k){ if(!db[k]){ gone.push(k); } });
+
+  var html='';
+  order.forEach(function(name){
+    var tb=db[name];
+    var schema=tb.columns.map(function(c){
+      return c.name+' '+c.type+colTags(c);
+    }).join('<span class="tsep">·</span>');
+    var colNames=tb.columns.map(function(c){ return c.name; });
+    var data=tb.rows.map(function(r){
+      return colNames.map(function(c){ return nv(r[c]); });
+    });
+    html+='<div class="live-tb">'
+      +'<div class="lt-head"><span class="lt-name"><i data-lucide="table-2"></i>'+esc(tb.name)+'</span>'
+      +'<span class="lt-count">'+tb.rows.length+' '+(tb.rows.length===1?'fila':'filas')+'</span></div>'
+      +'<div class="lt-schema">'+schema+'</div>'
+      +tableHTML(colNames,data,false)
+      +'</div>';
+  });
+  gone.forEach(function(name){
+    html+='<div class="live-tb gone">'
+      +'<div class="lt-head"><span class="lt-name"><i data-lucide="trash-2"></i>'+esc(name)+'</span><span class="lt-count">eliminada</span></div>'
+      +'<div class="gone-note"><i data-lucide="alert-triangle"></i> Esta tabla ya no existe: se ejecutó DROP TABLE. El botón «Restaurar datos» la recupera.</div>'
+      +'</div>';
+  });
+  if(html===''){
+    html='<div class="empty-state"><i data-lucide="database"></i><span>La base está vacía: todavía no creaste ninguna tabla con CREATE TABLE.</span></div>';
+  }
+  body.innerHTML=html;
+  icons();
+}
+
+function fitEditor(){
+  var ed=$('#ed');
+  if(!ed){ return; }
+  ed.style.height='auto';
+  var h=ed.scrollHeight;
+  if(h<150){ h=150; }
+  if(h>340){ h=340; }
+  ed.style.height=h+'px';
+}
+
+function rememberEditor(){
+  var ed=$('#ed');
+  if(ed && state.level){ state.levelEditor[state.level]=ed.value; }
+}
+
+function insertAtCaret(txt,back){
+  var ed=$('#ed');
+  var s, e;
+  if(document.activeElement===ed){
+    s=ed.selectionStart; e=ed.selectionEnd;
+  } else {
+    s=ed.value.length; e=ed.value.length;
+    ed.focus();
+  }
+  ed.value=ed.value.slice(0,s)+txt+ed.value.slice(e);
+  var np=s+txt.length-(back||0);
+  ed.focus();
+  try{ ed.setSelectionRange(np,np); }catch(err){}
+  rememberEditor();
+  fitEditor();
+}
+
+var running=false;
+function doRun(){
+  if(running){ return; }
+  var ed=$('#ed'), body=$('#resultsBody');
+  if(!ed || !body){ return; }
+  var sql=ed.value;
+  if(sql.trim()===''){
+    body.innerHTML='<div class="empty-state"><i data-lucide="corner-down-right"></i><span>El editor está vacío: escribí una consulta.</span></div>';
+    icons();
+    return;
+  }
+  running=true;
+  body.innerHTML='<div class="thinking">&gt; ejecutando<span class="cursor"></span></div>';
+  setTimeout(function(){
+    try{
+      Object.keys(state.db).forEach(function(k){ state.lv.tablesSeen[k]=1; });
+      var outs=runSQL(state.db,sql);
+      var hadErr=false;
+      outs.forEach(function(o){
+        if(o.status==='ok' || o.status==='warn'){ state.lv.hist.push(o); }
+        else{ hadErr=true; }
+      });
+      if(hadErr){
+        state.lv.hadError=true;
+        state.levelFlags[state.level].hadError=true;
+      }
+      Object.keys(state.db).forEach(function(k){ state.lv.tablesSeen[k]=1; });
+
+      var html='';
+      outs.forEach(function(o){
+        html+='<div class="run-item">'
+          +'<div class="run-line">'
+          +'<span class="rb '+o.status+'">'+(o.status==='ok'?'OK':(o.status==='warn'?'OJO':'ERR'))+'</span>'
+          +'<code class="run-sql">'+esc(o.sql)+'</code>';
+        if(o.status!=='err'){
+          html+='<span class="run-msg">'+esc(o.message)
+            +(o.result ? (' · '+o.result.rows.length+' '+(o.result.rows.length===1?'fila':'filas')+' · '+fmtMs(o.ms)) : '')
+            +'</span>';
+        }
+        html+='</div>';
+        if(o.status==='err'){
+          html+='<div class="err-msg"><i data-lucide="alert-triangle"></i><span>'+esc(o.message)+'</span></div>';
+        } else if(o.result){
+          html+=tableHTML(o.result.columns,o.result.rows,true);
+        }
+        html+='</div>';
+      });
+      setResults(html);
+      renderLive();
+      evaluateObjectives();
+      icons();
+    }catch(err){
+      console.error(err);
+      setResults('<div class="err-msg"><i data-lucide="alert-triangle"></i><span>Error inesperado: '+esc(err.message)+'</span></div>');
+      icons();
+    }finally{
+      running=false;
+    }
+  },300);
+}
+
+function evaluateObjectives(){
+  var L=LEVELS[state.level-1], n=L.n;
+  var newly=0;
+  L.objectives.forEach(function(o){
+    if(store.objs(n)[o.id]){ return; }
+    var ok=false;
+    try{ ok=!!o.check(); }catch(e){ ok=false; }
+    if(ok){
+      store.grantObj(n,o.id);
+      var li=$('#obj-'+o.id);
+      if(li){ li.classList.add('done'); }
+      newly++;
+    }
+  });
+  if(!store.bonus(n)){
+    var okB=false;
+    try{ okB=!!L.bonusCheck(); }catch(e){ okB=false; }
+    if(okB && store.grantBonus(n)){
+      $('#bonusRow').classList.add('done');
+      toast('Reto extra superado: +20 XP');
+      updateHUD();
+      updateNav();
+    }
+  }
+  var allDone=L.objectives.every(function(o){ return !!store.objs(n)[o.id]; });
+  if(newly>0 && allDone && !store.isDone(n)){
+    completeLevel(n);
+  }
+}
+
+function completeLevel(n){
+  store.complete(n,100);
+  updateHUD();
+  updateNav();
+  var L=LEVELS[n-1];
+  var isLast=(n===10);
+  confetti();
+  var btns;
+  if(isLast){
+    btns='<button class="btn primary" id="stampNext"><i data-lucide="trophy"></i> Ver mi certificado</button>';
+  } else {
+    btns='<button class="btn" id="stampStay">Quedarme acá</button>'
+      +'<button class="btn primary" id="stampNext"><i data-lucide="arrow-right"></i> Nivel '+(n+1)+': '+esc(LEVELS[n].title)+'</button>';
+  }
+  openModal(
+    '<div class="stamp-card">'
+    +'<div class="k">SQLAB · CPEM N°17 · 4.º B</div>'
+    +'<h3>¡Nivel '+n+' superado!</h3>'
+    +'<div class="sub">'+esc(L.title)+'</div>'
+    +'<div class="xp">+100 XP · '+store.data.xp+' XP totales</div>'
+    +'<div class="stamp-actions">'+btns+'</div>'
+    +'</div>',
+    {dismiss:false}
+  );
+  $('#stampNext').addEventListener('click',function(){
+    closeModal();
+    if(isLast){ showCertificate(); } else { go('level',n+1); }
+  });
+  var stay=$('#stampStay');
+  if(stay){ stay.addEventListener('click',closeModal); }
+  icons();
+}
+
+function showCertificate(){
+  var fecha=new Date().toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'});
+  openModal(
+    '<div class="cert">'
+    +'<div class="k">SQLAB · LABORATORIO DE BASES DE DATOS</div>'
+    +'<h2>Certificado de finalización</h2>'
+    +'<div class="of">Se deja constancia de que</div>'
+    +'<input class="name-input" id="certName" value="Estudiante de 4.º B" spellcheck="false">'
+    +'<p class="body-txt">completó los <strong>10 niveles</strong> del laboratorio de autoaprendizaje de bases de datos: teoría de BD, DDL, DML y DCL, SELECT con filtros y operadores lógicos, INSERT, UPDATE, DELETE, CREATE, TRUNCATE, DROP, agrupación y ordenamiento.</p>'
+    +'<div class="seal">SQL·LAB<br>4B<br>CPEM 17</div>'
+    +'<div class="foot">'
+    +'<div><div class="line">Fecha de emisión</div>'+esc(fecha)+'</div>'
+    +'<div style="text-align:center"><div class="line">Rango alcanzado</div>'+esc(rankName(store.data.xp))+' · '+store.data.xp+' XP</div>'
+    +'<div style="text-align:right"><div class="line">Cátedra</div>Bases de Datos · CPEM N°17</div>'
+    +'</div>'
+    +'<div class="stamp-actions cert-actions" style="margin-top:22px">'
+    +'<button class="btn ghost" id="certClose">Cerrar</button>'
+    +'<button class="btn primary" id="certPrint"><i data-lucide="printer"></i> Imprimir</button>'
+    +'</div>'
+    +'</div>'
+  );
+  $('#certClose').addEventListener('click',closeModal);
+  $('#certPrint').addEventListener('click',function(){
+    document.body.classList.add('print-cert');
+    window.print();
+    setTimeout(function(){ document.body.classList.remove('print-cert'); },400);
+  });
+  icons();
+}
+
+function buildManual(){
+  var cols=['id','nombre','apellido','comision'];
+  var rows=[
+    [1,'Valentina','Gómez','4B'],[2,'Mateo','Fernández','4B'],[3,'Lucía','Sáez','4A'],
+    [4,'Tomás','Villanueva','4B'],[5,'Julieta','Ríos','4C']
+  ];
+  var h='<table class="rtable"><thead><tr>';
+  cols.forEach(function(c,i){
+    h+='<th'+(i===0?'':' style="background:#7A5A22"')+'>'+c+'</th>';
+  });
+  h+='</tr></thead><tbody>';
+  rows.forEach(function(r){
+    h+='<tr'+(r[0]===1?' style="background:var(--green-soft)"':'')+'>'+r.map(function(v){
+      return '<td>'+v+'</td>';
+    }).join('')+'</tr>';
+  });
+  h+='</tbody></table>';
+  $('#demoTable').innerHTML=h;
+
+  var path=$('#pathChips');
+  path.innerHTML=LEVELS.map(function(L){
+    return '<a data-go="'+L.n+'">'+pad2(L.n)+' · '+esc(L.title)+'</a>';
+  }).join('');
+  Array.prototype.forEach.call(path.querySelectorAll('a'),function(a){
+    a.addEventListener('click',function(){
+      var n=parseInt(a.getAttribute('data-go'),10);
+      if(n>store.data.unlocked){ toast('Ese nivel se desbloquea completando los anteriores.','amber'); return; }
+      go('level',n);
+    });
+  });
+  $('#ctaStart').addEventListener('click',function(){ go('level',1); });
+}
+
+function engineSelfTest(){
+  try{
+    var db={demo:{name:'demo',columns:[{name:'id',type:'INTEGER',pk:true},{name:'nombre',type:'TEXT'}],rows:[{id:1,nombre:'Ana'},{id:2,nombre:'Beto'}]}};
+    function run(s){ return runSQL(db,s); }
+    function ok(cond,label){ if(!cond){ throw new Error(label); } }
+    var r1=run('SELECT nombre FROM demo WHERE id >= 2;');
+    ok(r1[0].status==='ok' && r1[0].result.rows.length===1 && r1[0].result.rows[0][0]==='Beto','SELECT');
+    var r2=run("INSERT INTO demo (nombre) VALUES ('Caro');");
+    ok(r2[0].status==='ok' && db.demo.rows.length===3 && db.demo.rows[2].id===3,'INSERT');
+    var r3=run("UPDATE demo SET nombre = 'Carla' WHERE id = 3;");
+    ok(r3[0].status==='ok' && db.demo.rows[2].nombre==='Carla','UPDATE');
+    var r4=run('SELECT COUNT(*) FROM demo;');
+    ok(r4[0].result && r4[0].result.rows[0][0]===3,'COUNT');
+    run('CREATE TABLE _t (id INTEGER PRIMARY KEY, v TEXT);');
+    run("INSERT INTO _t (v) VALUES ('x');");
+    run('TRUNCATE TABLE _t;');
+    run('DROP TABLE _t;');
+    ok(!db._t,'DROP');
+    run('CREATE TABLE _t2 (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT NOT NULL, edad INTEGER DEFAULT 0);');
+    run("INSERT INTO _t2 (nombre) VALUES ('Ana');");
+    ok(db._t2.rows[0].id===1 && db._t2.rows[0].edad===0,'CONSTRAINTS');
+    run('CREATE TABLE _t3 (id INTEGER, v TEXT, PRIMARY KEY (id));');
+    ok(db._t3 && db._t3.columns[0].pk,'PK-TABLE');
+    run('DROP TABLE _t2;');
+    run('DROP TABLE _t3;');
+    return true;
+  }catch(e){
+    console.error('SQLab autotest falló:',e);
+    return false;
+  }
+}
+
+function attachStaticEvents(){
+  $('#btnRun').addEventListener('click',function(){ doRun(); });
+  $('#btnHint').addEventListener('click',function(){ $('#hintBox').classList.toggle('hidden'); });
+  $('#btnSol').addEventListener('click',function(){ $('#solBox').classList.toggle('hidden'); });
+  $('#btnReset').addEventListener('click',function(){
+    restoreWorld(state.level);
+    setResults('<div class="empty-state"><i data-lucide="corner-down-right"></i><span>Datos restaurados a su estado inicial. El historial de resultados de este nivel se limpió.</span></div>');
+    renderLive();
+    icons();
+    toast('Datos del nivel restaurados.');
+  });
+
+  var ed=$('#ed');
+  ed.addEventListener('input',function(){
+    fitEditor();
+    rememberEditor();
+  });
+  ed.addEventListener('keydown',function(e){
+    if(e.key==='Tab'){
+      e.preventDefault();
+      var st=ed.selectionStart, en=ed.selectionEnd;
+      ed.value=ed.value.slice(0,st)+'  '+ed.value.slice(en);
+      ed.selectionStart=ed.selectionEnd=st+2;
+      rememberEditor();
+      fitEditor();
+    }
+  });
+
+  $('#edChips').addEventListener('click',function(ev){
+    var t=ev.target;
+    while(t && t!==this && !(t.classList && t.classList.contains('ed-chip'))){
+      t=t.parentNode;
+    }
+    if(!t || t===this){ return; }
+    var txt=t.getAttribute('data-ins')||'';
+    var back=parseInt(t.getAttribute('data-back')||'0',10);
+    insertAtCaret(txt,back);
+  });
+
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey || e.metaKey) && e.key==='Enter'){
+      if(state.view==='level' && $('#ed')){
+        e.preventDefault();
+        doRun();
+      }
+    }
+  });
+
+  $('#btnWipe').addEventListener('click',function(){
+    openModal(
+      '<div class="modal-body">'
+      +'<h3>¿Reiniciar todo el progreso?</h3>'
+      +'<p>Se borran los niveles completados, la XP, los retos extra y toda la memoria de resultados y consolas de esta sesión. Los datos de práctica se regeneran solos al entrar a cada nivel.</p>'
+      +'<div class="modal-actions">'
+      +'<button class="btn ghost" id="wipeNo">Cancelar</button>'
+      +'<button class="btn" id="wipeYes" style="background:var(--red);color:#F6F3E8;border-color:#7C2418"><i data-lucide="rotate-ccw"></i> Sí, empezar de cero</button>'
+      +'</div></div>'
+    );
+    $('#wipeNo').addEventListener('click',closeModal);
+    $('#wipeYes').addEventListener('click',function(){
+      store.wipe();
+      closeModal();
+      store.data={unlocked:1,xp:0,lv:{}};
+      state.worlds={};
+      state.levelResults={};
+      state.levelHist={};
+      state.levelFlags={};
+      state.levelEditor={};
+      state.levelSeen={};
+      updateHUD();
+      updateNav();
+      go('manual');
+      toast('Progreso reiniciado. ¡A arrancar de nuevo!');
+    });
+    icons();
+  });
+}
+
+var lastErrToast=0;
+window.addEventListener('error',function(e){
+  var now=Date.now();
+  if(now-lastErrToast<4000){ return; }
+  lastErrToast=now;
+  try{ toast('Error interno: '+((e && e.message)||'desconocido')+' — abrí la consola (F12) para más detalle.','amber'); }catch(_){}
+});
+
+try{
+  store.load();
+  buildNav();
+  buildManual();
+  attachStaticEvents();
+  updateHUD();
+  go('manual');
+  icons();
+  if(!engineSelfTest()){
+    toast('El motor SQL no pasó la prueba interna. Probá recargar la página (F5).','amber');
+  }
+  console.log('%c SQL·LAB v7 — iniciado correctamente ','background:#136A47;color:#F6F3E8;padding:3px 8px;border-radius:4px;font-weight:bold');
+  if(store.data.xp===0 && !store.isDone(1)){
+    setTimeout(function(){ toast('¡Bienvenido/a! Tocá «Nivel 01» en el menú de la izquierda o el botón verde del manual.'); },700);
+  }
+}catch(err){
+  console.error('Error al iniciar SQLab:',err);
+  document.body.insertAdjacentHTML('beforeend','<div style="position:fixed;left:16px;right:16px;bottom:16px;background:#B23A2A;color:#fff;padding:14px 18px;border-radius:10px;font-family:monospace;z-index:999">Error al iniciar: '+esc(err.message)+'</div>');
+}
+</script>
+</body>
+</html>
 <title>SQLab · Laboratorio de Bases de Datos — CPEM N°17 · 4.º B Informática</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
