@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F3EFE5">
+<title>Utilización del recurso · SQLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box} :root{--paper:#F3EFE5;--card:#FBF8F1;--ink:#1C1A14;--soft:#6A6353;--hair:rgba(28,26,20,.18);--green:#136A47;--deep:#0B4A31;--green-soft:#E2EEE4;--amber:#B36A1D;--amber-soft:#F6E8D3;--mono:'IBM Plex Mono',monospace;--sans:'Space Grotesk',sans-serif}
+body{margin:0;background:var(--paper);background-image:radial-gradient(rgba(28,26,20,.075) 1px,transparent 1.3px);background-size:22px 22px;color:var(--ink);font:15px/1.6 var(--sans)}
+header{background:var(--card);border-bottom:1.5px solid var(--ink);padding:16px clamp(16px,4vw,40px);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:20px}.mark{background:var(--green);color:white;padding:8px 10px;border:1.5px solid var(--deep);border-radius:9px;font:600 16px var(--mono);box-shadow:3px 3px var(--ink)}
+.btn{display:inline-block;text-decoration:none;background:var(--green);color:#fff;border:1.5px solid var(--deep);border-radius:10px;padding:10px 16px;font-weight:700;box-shadow:3px 3px var(--ink)}.btn.secondary{background:var(--card);color:var(--ink);border-color:var(--ink)}
+main{max-width:1050px;margin:30px auto;padding:0 18px 60px}.hero,.card{background:var(--card);border:1.5px solid var(--ink);border-radius:14px;box-shadow:4px 4px var(--ink);margin-bottom:22px}.hero{padding:clamp(24px,5vw,44px);position:relative;overflow:hidden}.kicker{font:11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--deep)}h1{font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-.03em;margin:10px 0 14px}h1 span{color:var(--green)}h2{font-size:22px;margin:0 0 14px}h3{font-size:17px;margin:0 0 8px}.hero p{max-width:780px;color:#3E3A2E;font-size:16px}.card{padding:24px clamp(18px,4vw,30px)}.card p{margin:8px 0;color:#3E3A2E}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.mini{padding:16px;border:1px solid var(--hair);border-radius:11px;background:#FFFDF6}.mini strong{color:var(--deep)}ul,ol{padding-left:22px}li{margin:7px 0}.note{background:var(--amber-soft);border-left:4px solid var(--amber);padding:13px 16px;border-radius:0 10px 10px 0;margin-top:14px}.tag{display:inline-block;font:11px var(--mono);padding:5px 8px;background:var(--green-soft);color:var(--deep);border:1px solid var(--deep);border-radius:6px;margin:3px 4px 3px 0}a{color:var(--deep);overflow-wrap:anywhere}footer{border-top:1.5px solid var(--ink);background:var(--card);padding:22px;text-align:center;color:var(--soft);font-size:13px}
+table.rubrica{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px;background:#FFFDF6;border:1.5px solid var(--ink);border-radius:10px;overflow:hidden}
+table.rubrica th,table.rubrica td{border:1px solid var(--hair);padding:10px 12px;vertical-align:top;text-align:left}
+table.rubrica thead th{background:var(--green-soft);color:var(--deep);font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+table.rubrica tbody th{background:#F6F1E4;color:var(--ink);font-weight:700;width:20%}
+table.rubrica td{color:#3E3A2E}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.card{padding:20px 17px}.brand{font-size:17px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span class="mark">&gt;_</span><span>SQL·LAB <small style="display:block;color:var(--soft);font:10px var(--mono);letter-spacing:.1em">CPEM N°17 · 4.º B INFORMÁTICA</small></span></div>
+  <a class="btn secondary" href="index.html">← Volver al laboratorio</a>
+</header>
+<main>
+  <section class="hero">
+    <div class="kicker">Guía pedagógica · Recurso educativo abierto</div>
+    <h1>Utilización <span>del recurso</span></h1>
+    <p><strong>SQLab · Laboratorio de Bases de Datos</strong> es un recurso web interactivo para introducirse en SQL mediante una secuencia que combina explicaciones breves, práctica progresiva y retroalimentación inmediata.</p>
+    <p>Su premisa de trabajo es: <strong>“Primero se entiende, después se escribe”.</strong> El manual presenta los conceptos fundamentales y los diez niveles permiten ponerlos en práctica escribiendo consultas y observando sus resultados.</p>
+    <div><span class="tag">Informática · Bases de datos</span><span class="tag">Nivel secundario</span><span class="tag">CC0 1.0</span></div>
+    <p style="margin-top:22px"><a class="btn" href="index.html">Abrir SQLab y comenzar →</a></p>
+  </section>
+
+  <section class="card">
+    <h2>01 · Identificación del recurso</h2>
+    <div class="grid">
+      <div class="mini"><h3>Título</h3><p>SQLab · Laboratorio de Bases de Datos – Introducción interactiva a SQL.</p></div>
+      <div class="mini"><h3>Autoría y afiliación</h3><p>Matías Gonzalo Donaire · CPEM N°17, orientación en Informática (4.º B).</p></div>
+      <div class="mini"><h3>Destinatarios</h3><p>Estudiantes de 4.º año del CPEM con orientación en Informática, nivel secundario.</p></div>
+      <div class="mini"><h3>Licencia abierta</h3><p>Creative Commons CC0 1.0 Universal: dedicación al dominio público.</p><p><a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">Consultar la licencia CC0 1.0</a></p></div>
+    </div>
+    <p><strong>Repositorio:</strong> <a href="https://github.com/gon123kt/sql-lab-4b" target="_blank" rel="noopener">github.com/gon123kt/sql-lab-4b</a> — incluye la licencia, un README con la descripción del REA y un <code>index.html</code> que puede descargarse y adaptarse.</p>
+    <p><strong>Recurso publicado:</strong> <a href="https://gon123kt.github.io/sql-lab-4b/" target="_blank" rel="noopener">gon123kt.github.io/sql-lab-4b/</a> · <a href="https://educanqn.com.ar/informatica/base_de_datos/" target="_blank" rel="noopener">educanqn.com.ar/informatica/base_de_datos/</a></p>
+  </section>
+
+  <section class="card">
+    <h2>02 · Intencionalidad pedagógica y curricular</h2>
+    <p>El propósito principal es que las y los estudiantes se introduzcan en el lenguaje SQL de manera activa, comprendiendo cómo se organiza la información en una base de datos y resolviendo consultas y operaciones sobre ella.</p>
+    <h3>Objetivos de aprendizaje</h3>
+    <ul>
+      <li>Definir base de datos y SGBD, y reconocer tabla, fila o registro, columna o campo y celda.</li>
+      <li>Explicar el rol de la clave primaria (<code>PRIMARY KEY</code>) como identificador único de cada fila.</li>
+      <li>Diferenciar DDL, DML y DCL, y relacionar cada grupo con sus comandos.</li>
+      <li>Crear y eliminar tablas con <code>CREATE TABLE</code> y <code>DROP TABLE</code>, utilizando restricciones como <code>NOT NULL</code>, <code>DEFAULT</code> y <code>AUTOINCREMENT</code>.</li>
+      <li>Consultar datos con <code>SELECT</code>, filtrar con <code>WHERE</code>, ordenar con <code>ORDER BY</code> y agrupar con <code>GROUP BY</code>.</li>
+      <li>Agregar, modificar y eliminar filas con <code>INSERT</code>, <code>UPDATE</code> y <code>DELETE</code>.</li>
+      <li>Leer e interpretar mensajes de error como parte del proceso de aprendizaje.</li>
+    </ul>
+    <h3 style="margin-top:16px">Sugerencia de implementación</h3>
+    <p>Se recomienda usar SQLab como <strong>introducción al lenguaje SQL</strong>, al inicio de la unidad de bases de datos:</p>
+    <ul>
+      <li>El <strong>manual del laboratorio</strong> sirve como fase de inicio.</li>
+      <li>Los <strong>niveles de práctica</strong> funcionan como fase de desarrollo.</li>
+      <li>Los <strong>niveles avanzados y los retos extra</strong> pueden funcionar como cierre integrador o como instancia de evaluación formativa.</li>
+    </ul>
+    <p>Como cada nivel se desbloquea al completar el anterior, el recorrido puede hacerse de forma <strong>individual, en parejas o como tarea domiciliaria</strong>.</p>
+  </section>
+
+  <section class="card">
+    <h2>03 · ¿Cómo se utiliza?</h2>
+    <ol>
+      <li><strong>Leer el manual teórico.</strong> Revisar los conceptos de base de datos, clave primaria y los lenguajes DDL, DML y DCL.</li>
+      <li><strong>Comenzar por el nivel 1.</strong> Cada nivel presenta una teoría breve, sintaxis general y una misión con objetivos.</li>
+      <li><strong>Escribir y ejecutar consultas.</strong> Utilizar la consola SQL; también se pueden insertar comandos con los botones de acceso rápido. <code>Ctrl + Enter</code> ejecuta la consulta.</li>
+      <li><strong>Revisar los resultados.</strong> Las respuestas se muestran como tablas y el panel “Base de datos en vivo” refleja los cambios en los datos.</li>
+      <li><strong>Usar las ayudas cuando sea necesario.</strong> Cada nivel incluye pistas, solución y un reto extra que otorga +20 XP.</li>
+      <li><strong>Avanzar progresivamente.</strong> Los niveles se desbloquean al completar el anterior. El recorrido puede realizarse individualmente, en parejas o como tarea domiciliaria.</li>
+    </ol>
+    <div class="note"><strong>Importante:</strong> el progreso queda guardado en el navegador y equipo utilizados. No se sincroniza automáticamente entre dispositivos. Conviene utilizar siempre el mismo navegador y recordar que cada nivel permite restaurar sus datos.</div>
+  </section>
+
+  <section class="card">
+    <h2>04 · Requisitos técnicos y accesibilidad</h2>
+    <div class="grid">
+      <div class="mini"><h3>Acceso</h3><p>Es una aplicación web que requiere únicamente un navegador. No necesita instalación ni un servidor de base de datos propio para realizar las prácticas incluidas.</p></div>
+      <div class="mini"><h3>Tecnologías</h3><p>El recurso está desarrollado principalmente con HTML, CSS y JavaScript. Para modificar la teoría o los niveles se requieren conocimientos de desarrollo web.</p></div>
+      <div class="mini"><h3>Apoyos para aprender</h3><p>Los mensajes de error explican qué falló y por qué; cada nivel cuenta con pistas y soluciones como andamiaje. Los botones de inserción rápida reducen la escritura necesaria.</p></div>
+      <div class="mini"><h3>Diseño Universal para el Aprendizaje</h3><p>Los contenidos y ejemplos son textuales y la consola admite teclado (<code>Ctrl + Enter</code>). Se recomienda verificar el contraste y la compatibilidad con lectores de pantalla según las necesidades del grupo.</p></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>05 · Orientaciones para adaptar y reutilizar</h2>
+    <p>La licencia CC0 1.0 permite copiar, modificar, distribuir y utilizar el recurso, incluso con fines comerciales, sin necesidad de solicitar permiso ni de atribuir la autoría.</p>
+    <ul>
+      <li><strong>Contextualizar los ejemplos:</strong> reemplazar la tabla de ejemplo (el curso 4.º B) y las misiones por datos de la propia escuela, el comercio local o proyectos de la orientación.</li>
+      <li><strong>Ajustar el recorrido:</strong> asignar solo algunos niveles, o reordenarlos según el avance del curso, y usar los retos extra como actividad optativa.</li>
+      <li><strong>Trabajar en parejas:</strong> que un estudiante escriba la consulta y el otro la explique antes de ejecutarla.</li>
+      <li><strong>Profundizar en DCL:</strong> completar con una práctica en un servidor real (por ejemplo MySQL o PostgreSQL) donde se pueda usar <code>GRANT</code> y <code>REVOKE</code>.</li>
+      <li><strong>Integrar con otras materias:</strong> conectar las consultas con proyectos de programación o de diseño de interfaces.</li>
+      <li><strong>Reutilizar el modelo:</strong> al ser CC0, el laboratorio puede copiarse y rediseñarse para otros contenidos (por ejemplo, Python o HTML) o para otros cursos.</li>
+      <li><strong>Apoyar la gamificación:</strong> retomar el sistema de XP y niveles como insumo para la evaluación y la devolución a los estudiantes.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>06 · Evaluación formativa</h2>
+    <h3>Preguntas guía para la conversación en clase</h3>
+    <ul>
+      <li>¿Qué diferencia hay entre una fila, una columna y una celda? ¿Para qué sirve la clave primaria?</li>
+      <li>¿Qué cambia entre un comando DDL y uno DML? ¿Por qué <code>DROP TABLE</code> es más riesgoso que <code>DELETE</code>?</li>
+      <li>¿Qué consulta escribirías para obtener solo los estudiantes con nota mayor o igual a 6?</li>
+      <li>¿Qué error te mostró la consola y cómo lo resolviste?</li>
+      <li>¿Por qué es importante que no cualquier usuario pueda borrar datos (<code>GRANT</code> y <code>REVOKE</code>)?</li>
+    </ul>
+
+    <h3 style="margin-top:22px">Rúbrica</h3>
+    <div class="table-wrap">
+      <table class="rubrica">
+        <thead>
+          <tr>
+            <th>Criterio</th>
+            <th>En proceso</th>
+            <th>Logrado</th>
+            <th>Destacado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Conceptos básicos</th>
+            <td>Reconoce tabla, fila y columna, pero confunde clave primaria o SGBD.</td>
+            <td>Explica con sus palabras base de datos, SGBD y clave primaria.</td>
+            <td>Relaciona los conceptos con ejemplos propios de su entorno.</td>
+          </tr>
+          <tr>
+            <th>DDL, DML y DCL</th>
+            <td>Distingue algunos comandos con ayuda.</td>
+            <td>Clasifica los comandos en DDL, DML o DCL y explica su función.</td>
+            <td>Justifica qué lenguaje conviene usar en cada situación.</td>
+          </tr>
+          <tr>
+            <th>Consultas con SELECT</th>
+            <td>Resuelve consultas simples usando la pista.</td>
+            <td>Filtra y ordena con <code>WHERE</code> y <code>ORDER BY</code> de forma autónoma.</td>
+            <td>Combina condiciones (<code>AND</code>, <code>OR</code>) y agrupa con <code>GROUP BY</code>.</td>
+          </tr>
+          <tr>
+            <th>Manipulación y definición</th>
+            <td>Ejecuta <code>INSERT</code>, <code>UPDATE</code> o <code>DELETE</code> con errores frecuentes.</td>
+            <td>Usa <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> y <code>CREATE TABLE</code> correctamente.</td>
+            <td>Aplica restricciones (<code>NOT NULL</code>, <code>DEFAULT</code>) y evita errores como un <code>UPDATE</code> sin <code>WHERE</code>.</td>
+          </tr>
+          <tr>
+            <th>Lectura de errores y autonomía</th>
+            <td>Se detiene ante un error o recurre enseguida a la solución.</td>
+            <td>Interpreta el mensaje de error y corrige su consulta.</td>
+            <td>Anticipa errores y orienta a sus compañeros.</td>
+          </tr>
+          <tr>
+            <th>Progreso en el laboratorio</th>
+            <td>Completa los primeros niveles.</td>
+            <td>Completa los 10 niveles.</td>
+            <td>Completa los niveles y los retos extra.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:22px">Lista de cotejo complementaria</h3>
+    <ul>
+      <li>☐ Leyó el manual antes de empezar.</li>
+      <li>☐ Explica qué es una base de datos y para qué sirve la clave primaria.</li>
+      <li>☐ Distingue DDL, DML y DCL con un ejemplo de cada uno.</li>
+      <li>☐ Completó los niveles asignados y las misiones fueron validadas.</li>
+      <li>☐ Resolvió al menos una consulta sin utilizar la pista ni la solución.</li>
+      <li>☐ Intentó el reto extra de al menos un nivel.</li>
+    </ul>
+    <p>La evaluación puede considerar la comprensión de conceptos, la resolución autónoma de consultas, la interpretación de errores, el progreso en los niveles y la capacidad de explicar las decisiones tomadas.</p>
+  </section>
+  <p style="text-align:center;margin:30px 0"><a class="btn" href="index.html">← Volver a SQLab</a></p>
+</main>
+<footer>SQLab · Laboratorio de Bases de Datos · CPEM N°17 · 4.º B Informática<br>Desarrollado por Matías Gonzalo Donaire · Licencia CC0 1.0 Universal</footer>
+</body>
+</html>
