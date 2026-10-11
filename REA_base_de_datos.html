@@ -8,27 +8,264 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+/* Aplica el tema antes de pintar para evitar parpadeo (FOUC) */
+(function(){
+  try{
+    var t = localStorage.getItem('sqlab-theme');
+    if(!t){ t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+    document.documentElement.setAttribute('data-theme', t);
+  }catch(e){}
+})();
+</script>
 <style>
-*{box-sizing:border-box} :root{--paper:#F3EFE5;--card:#FBF8F1;--ink:#1C1A14;--soft:#6A6353;--hair:rgba(28,26,20,.18);--green:#136A47;--deep:#0B4A31;--green-soft:#E2EEE4;--amber:#B36A1D;--amber-soft:#F6E8D3;--mono:'IBM Plex Mono',monospace;--sans:'Space Grotesk',sans-serif}
-body{margin:0;background:var(--paper);background-image:radial-gradient(rgba(28,26,20,.075) 1px,transparent 1.3px);background-size:22px 22px;color:var(--ink);font:15px/1.6 var(--sans)}
-header{background:var(--card);border-bottom:1.5px solid var(--ink);padding:16px clamp(16px,4vw,40px);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:20px}.mark{background:var(--green);color:white;padding:8px 10px;border:1.5px solid var(--deep);border-radius:9px;font:600 16px var(--mono);box-shadow:3px 3px var(--ink)}
-.btn{display:inline-block;text-decoration:none;background:var(--green);color:#fff;border:1.5px solid var(--deep);border-radius:10px;padding:10px 16px;font-weight:700;box-shadow:3px 3px var(--ink)}.btn.secondary{background:var(--card);color:var(--ink);border-color:var(--ink)}
-main{max-width:1050px;margin:30px auto;padding:0 18px 60px}.hero,.card{background:var(--card);border:1.5px solid var(--ink);border-radius:14px;box-shadow:4px 4px var(--ink);margin-bottom:22px}.hero{padding:clamp(24px,5vw,44px);position:relative;overflow:hidden}.kicker{font:11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--deep)}h1{font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-.03em;margin:10px 0 14px}h1 span{color:var(--green)}h2{font-size:22px;margin:0 0 14px}h3{font-size:17px;margin:0 0 8px}.hero p{max-width:780px;color:#3E3A2E;font-size:16px}.card{padding:24px clamp(18px,4vw,30px)}.card p{margin:8px 0;color:#3E3A2E}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.mini{padding:16px;border:1px solid var(--hair);border-radius:11px;background:#FFFDF6}.mini strong{color:var(--deep)}ul,ol{padding-left:22px}li{margin:7px 0}.note{background:var(--amber-soft);border-left:4px solid var(--amber);padding:13px 16px;border-radius:0 10px 10px 0;margin-top:14px}.tag{display:inline-block;font:11px var(--mono);padding:5px 8px;background:var(--green-soft);color:var(--deep);border:1px solid var(--deep);border-radius:6px;margin:3px 4px 3px 0}a{color:var(--deep);overflow-wrap:anywhere}footer{border-top:1.5px solid var(--ink);background:var(--card);padding:22px;text-align:center;color:var(--soft);font-size:13px}
-table.rubrica{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px;background:#FFFDF6;border:1.5px solid var(--ink);border-radius:10px;overflow:hidden}
-table.rubrica th,table.rubrica td{border:1px solid var(--hair);padding:10px 12px;vertical-align:top;text-align:left}
-table.rubrica thead th{background:var(--green-soft);color:var(--deep);font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase}
-table.rubrica tbody th{background:#F6F1E4;color:var(--ink);font-weight:700;width:20%}
-table.rubrica td{color:#3E3A2E}
+*{box-sizing:border-box}
+
+/* ---------- TEMA CLARO (por defecto) ---------- */
+:root{
+  --paper:#F3EFE5;
+  --card:#FBF8F1;
+  --ink:#1C1A14;
+  --soft:#6A6353;
+  --body-text:#3E3A2E;
+  --hair:rgba(28,26,20,.18);
+  --green:#136A47;
+  --deep:#0B4A31;
+  --on-green:#FFFFFF;
+  --btn-border:#0B4A31;
+  --green-soft:#E2EEE4;
+  --amber:#B36A1D;
+  --amber-soft:#F6E8D3;
+  --mini-bg:#FFFDF6;
+  --tbody-th-bg:#F6F1E4;
+  --dot:rgba(28,26,20,.075);
+  --shadow:#1C1A14;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'Space Grotesk',sans-serif;
+  color-scheme: light;
+}
+
+/* ---------- TEMA OSCURO ---------- */
+[data-theme="dark"]{
+  --paper:#12120D;
+  --card:#1C1C15;
+  --ink:#EDE8DC;
+  --soft:#A39B88;
+  --body-text:#D6D0C2;
+  --hair:rgba(237,232,220,.22);
+  --green:#4FD19A;
+  --deep:#8FE9C0;
+  --on-green:#0A2A1D;
+  --btn-border:#0A2A1D;
+  --green-soft:#17352A;
+  --amber:#E8B36A;
+  --amber-soft:#382A12;
+  --mini-bg:#23231A;
+  --tbody-th-bg:#26261B;
+  --dot:rgba(237,232,220,.05);
+  --shadow:#000000;
+  color-scheme: dark;
+}
+
+/* ---------- ALTO CONTRASTE ---------- */
+[data-theme="contrast"]{
+  --paper:#000000;
+  --card:#000000;
+  --ink:#FFFFFF;
+  --soft:#F0F0F0;
+  --body-text:#FFFFFF;
+  --hair:#FFFFFF;
+  --green:#FFEE00;
+  --deep:#FFEE00;
+  --on-green:#000000;
+  --btn-border:#FFFFFF;
+  --green-soft:#000000;
+  --amber:#FFEE00;
+  --amber-soft:#141400;
+  --mini-bg:#000000;
+  --tbody-th-bg:#000000;
+  --dot:transparent;
+  --shadow:#FFFFFF;
+  color-scheme: dark;
+}
+
+/* ---------- BASE ---------- */
+body{
+  margin:0;
+  background:var(--paper);
+  background-image:radial-gradient(var(--dot) 1px,transparent 1.3px);
+  background-size:22px 22px;
+  color:var(--ink);
+  font:15px/1.6 var(--sans);
+  transition:background-color .2s ease,color .2s ease;
+}
+
+/* ---------- HEADER ---------- */
+header{
+  background:var(--card);
+  border-bottom:1.5px solid var(--ink);
+  padding:16px clamp(16px,4vw,40px);
+  display:flex;justify-content:space-between;align-items:center;
+  gap:14px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:20px}
+.mark{
+  background:var(--green);color:var(--on-green);
+  padding:8px 10px;border:1.5px solid var(--btn-border);
+  border-radius:9px;font:600 16px var(--mono);
+  box-shadow:3px 3px var(--shadow);
+}
+.header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* ---------- SELECTOR DE TEMA ---------- */
+.theme-switch{
+  display:inline-flex;border:1.5px solid var(--ink);border-radius:10px;
+  overflow:hidden;background:var(--mini-bg);
+  box-shadow:2px 2px var(--shadow);
+}
+.theme-switch button{
+  appearance:none;background:transparent;border:0;
+  border-right:1.5px solid var(--hair);
+  color:var(--ink);font:600 11px var(--mono);
+  padding:8px 10px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:5px;line-height:1;
+  letter-spacing:.04em;
+  transition:background-color .15s ease,color .15s ease;
+}
+.theme-switch button:last-child{border-right:0}
+.theme-switch button:hover{background:var(--green-soft);color:var(--deep)}
+.theme-switch button[aria-pressed="true"]{background:var(--green);color:var(--on-green)}
+.theme-switch button:focus-visible{outline:2px solid var(--deep);outline-offset:-3px}
+
+/* ---------- BOTONES ---------- */
+.btn{
+  display:inline-block;text-decoration:none;
+  background:var(--green);color:var(--on-green);
+  border:1.5px solid var(--btn-border);border-radius:10px;
+  padding:10px 16px;font-weight:700;
+  box-shadow:3px 3px var(--shadow);
+}
+.btn.secondary{background:var(--card);color:var(--ink);border-color:var(--ink)}
+
+/* ---------- LAYOUT ---------- */
+main{max-width:1050px;margin:30px auto;padding:0 18px 60px}
+.hero,.card{
+  background:var(--card);border:1.5px solid var(--ink);
+  border-radius:14px;box-shadow:4px 4px var(--shadow);
+  margin-bottom:22px;
+}
+.hero{padding:clamp(24px,5vw,44px);position:relative;overflow:hidden}
+.card{padding:24px clamp(18px,4vw,30px)}
+.kicker{font:11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--deep)}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-.03em;margin:10px 0 14px}
+h1 span{color:var(--green)}
+[data-theme="dark"] h1 span{color:var(--deep)}
+h2{font-size:22px;margin:0 0 14px}
+h3{font-size:17px;margin:0 0 8px}
+.hero p{max-width:780px;color:var(--body-text);font-size:16px}
+.card p{margin:8px 0;color:var(--body-text)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.mini{padding:16px;border:1px solid var(--hair);border-radius:11px;background:var(--mini-bg)}
+.mini strong{color:var(--deep)}
+ul,ol{padding-left:22px}
+li{margin:7px 0}
+
+/* ---------- NOTA ---------- */
+.note{
+  background:var(--amber-soft);border-left:4px solid var(--amber);
+  padding:13px 16px;border-radius:0 10px 10px 0;margin-top:14px;
+  color:var(--body-text);
+}
+
+/* ---------- TAGS ---------- */
+.tag{
+  display:inline-block;font:11px var(--mono);
+  padding:5px 8px;background:var(--green-soft);color:var(--deep);
+  border:1px solid var(--deep);border-radius:6px;margin:3px 4px 3px 0;
+}
+
+/* ---------- ENLACES ---------- */
+a{color:var(--deep);overflow-wrap:anywhere}
+a:focus-visible,.btn:focus-visible,button:focus-visible{outline:3px solid var(--deep);outline-offset:3px}
+
+/* ---------- RÚBRICA ---------- */
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px}
-@media(max-width:650px){.grid{grid-template-columns:1fr}.card{padding:20px 17px}.brand{font-size:17px}}
+table.rubrica{
+  width:100%;border-collapse:collapse;margin-top:12px;
+  font-size:13.5px;background:var(--mini-bg);
+  border:1.5px solid var(--ink);border-radius:10px;overflow:hidden;
+}
+table.rubrica th,table.rubrica td{
+  border:1px solid var(--hair);padding:10px 12px;
+  vertical-align:top;text-align:left;
+}
+table.rubrica thead th{
+  background:var(--green-soft);color:var(--deep);
+  font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;
+}
+table.rubrica tbody th{background:var(--tbody-th-bg);color:var(--ink);font-weight:700;width:20%}
+table.rubrica td{color:var(--body-text)}
+
+/* ---------- FOOTER ---------- */
+footer{
+  border-top:1.5px solid var(--ink);background:var(--card);
+  padding:22px;text-align:center;color:var(--soft);font-size:13px;
+}
+
+/* ---------- AJUSTES ESPECÍFICOS DE ALTO CONTRASTE ---------- */
+[data-theme="contrast"] header{border-bottom-width:3px}
+[data-theme="contrast"] .hero,
+[data-theme="contrast"] .card{border-width:3px;box-shadow:6px 6px var(--shadow)}
+[data-theme="contrast"] .mini{border:2px solid var(--hair)}
+[data-theme="contrast"] .btn,[data-theme="contrast"] .mark{border-width:2.5px;box-shadow:4px 4px var(--shadow)}
+[data-theme="contrast"] a{text-decoration:underline}
+[data-theme="contrast"] table.rubrica,
+[data-theme="contrast"] table.rubrica th,
+[data-theme="contrast"] table.rubrica td{border:2px solid #FFFFFF}
+[data-theme="contrast"] table.rubrica thead th{background:#FFFFFF;color:#000000}
+[data-theme="contrast"] .theme-switch{border-width:2.5px}
+[data-theme="contrast"] .theme-switch button{border-right-color:#FFFFFF}
+[data-theme="contrast"] .theme-switch button[aria-pressed="true"]{background:#FFEE00;color:#000000}
+[data-theme="contrast"] .note{border-left-width:8px}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:650px){
+  .grid{grid-template-columns:1fr}
+  .card{padding:20px 17px}
+  .brand{font-size:17px}
+  .theme-switch button .lbl{display:none}
+  .theme-switch button{padding:9px 11px;font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand"><span class="mark">&gt;_</span><span>SQL·LAB <small style="display:block;color:var(--soft);font:10px var(--mono);letter-spacing:.1em">CPEM N°17 · 4.º B INFORMÁTICA</small></span></div>
-  <a class="btn secondary" href="index.html">← Volver al laboratorio</a>
+  <div class="brand">
+    <span class="mark">&gt;_</span>
+    <span>SQL·LAB
+      <small style="display:block;color:var(--soft);font:10px var(--mono);letter-spacing:.1em">CPEM N°17 · 4.º B INFORMÁTICA</small>
+    </span>
+  </div>
+
+  <div class="header-actions">
+    <div class="theme-switch" role="group" aria-label="Tema de contraste">
+      <button type="button" data-theme-btn="light" aria-pressed="true" title="Tema claro" aria-label="Tema claro">
+        <span aria-hidden="true">☀</span><span class="lbl">Claro</span>
+      </button>
+      <button type="button" data-theme-btn="dark" aria-pressed="false" title="Tema oscuro" aria-label="Tema oscuro">
+        <span aria-hidden="true">☾</span><span class="lbl">Oscuro</span>
+      </button>
+      <button type="button" data-theme-btn="contrast" aria-pressed="false" title="Alto contraste" aria-label="Alto contraste">
+        <span aria-hidden="true">◐</span><span class="lbl">Contraste</span>
+      </button>
+    </div>
+    <a class="btn secondary" href="index.html">← Volver al laboratorio</a>
+  </div>
 </header>
+
 <main>
   <section class="hero">
     <div class="kicker">Guía pedagógica · Recurso educativo abierto</div>
@@ -43,7 +280,7 @@ table.rubrica td{color:#3E3A2E}
     <h2>01 · Identificación del recurso</h2>
     <div class="grid">
       <div class="mini"><h3>Título</h3><p>SQLab · Laboratorio de Bases de Datos – Introducción interactiva a SQL.</p></div>
-      <div class="mini"><h3>Autoría y afiliación</h3><p>Ing. Prof.Matías Gonzalo Donaire · CPEM N°17, orientación en Informática (4.º B).</p></div>
+      <div class="mini"><h3>Autoría y afiliación</h3><p>Ing. Prof. Matías Gonzalo Donaire · CPEM N°17, orientación en Informática (4.º B).</p></div>
       <div class="mini"><h3>Destinatarios</h3><p>Estudiantes de 4.º año del CPEM con orientación en Informática, nivel secundario.</p></div>
       <div class="mini"><h3>Licencia abierta</h3><p>Creative Commons CC0 1.0 Universal: dedicación al dominio público.</p><p><a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">Consultar la licencia CC0 1.0</a></p></div>
     </div>
@@ -94,6 +331,9 @@ table.rubrica td{color:#3E3A2E}
       <div class="mini"><h3>Tecnologías</h3><p>El recurso está desarrollado principalmente con HTML, CSS y JavaScript. Para modificar la teoría o los niveles se requieren conocimientos de desarrollo web.</p></div>
       <div class="mini"><h3>Apoyos para aprender</h3><p>Los mensajes de error explican qué falló y por qué; cada nivel cuenta con pistas y soluciones como andamiaje. Los botones de inserción rápida reducen la escritura necesaria.</p></div>
       <div class="mini"><h3>Diseño Universal para el Aprendizaje</h3><p>Los contenidos y ejemplos son textuales y la consola admite teclado (<code>Ctrl + Enter</code>). Se recomienda verificar el contraste y la compatibilidad con lectores de pantalla según las necesidades del grupo.</p></div>
+    </div>
+    <div class="note">
+      <strong>Contraste y tema:</strong> esta guía incorpora un <strong>selector de tema con tres modos</strong> —<em>Claro</em>, <em>Oscuro</em> y <em>Alto contraste</em>— que ajusta colores, bordes y fondos para mejorar la legibilidad según las condiciones de luz o las necesidades visuales. En <em>Alto contraste</em> se refuerzan los bordes, se subrayan los enlaces y se invierten los encabezados de tabla para maximizar la distinción figura-fondo. La preferencia se guarda en el navegador y, si no hay una elección previa, se respeta automáticamente la configuración del sistema operativo (<code>prefers-color-scheme</code>).
     </div>
   </section>
 
@@ -175,8 +415,56 @@ table.rubrica td{color:#3E3A2E}
     </div>
     <p>La evaluación puede considerar la comprensión de conceptos, la resolución autónoma de consultas, la interpretación de errores, el progreso en los niveles y la capacidad de explicar las decisiones tomadas.</p>
   </section>
+
   <p style="text-align:center;margin:30px 0"><a class="btn" href="index.html">← Volver a SQLab</a></p>
 </main>
-<footer>SQLab · Laboratorio de Bases de Datos · CPEM N°17 · 4.º B Informática<br>Desarrollado por Matías Gonzalo Donaire · Licencia CC0 1.0 Universal</footer>
+
+<footer>
+  SQLab · Laboratorio de Bases de Datos · CPEM N°17 · 4.º B Informática<br>
+  Desarrollado por Ing. Prof. Matías Gonzalo Donaire · Licencia CC0 1.0 Universal
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var btns = document.querySelectorAll('[data-theme-btn]');
+  var meta = document.querySelector('meta[name="theme-color"]');
+  var colors = { light:'#F3EFE5', dark:'#12120D', contrast:'#000000' };
+  var mql = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function apply(theme, save){
+    root.setAttribute('data-theme', theme);
+    for(var i=0;i<btns.length;i++){
+      btns[i].setAttribute('aria-pressed', btns[i].dataset.themeBtn === theme ? 'true' : 'false');
+    }
+    if(meta && colors[theme]) meta.setAttribute('content', colors[theme]);
+    if(save){ try{ localStorage.setItem('sqlab-theme', theme); }catch(e){} }
+  }
+
+  // Estado inicial: preferencia guardada > preferencia del sistema
+  var saved = null;
+  try{ saved = localStorage.getItem('sqlab-theme'); }catch(e){}
+  var initial = saved || (mql.matches ? 'dark' : 'light');
+  apply(initial, false);
+
+  // Click en cada botón: aplica y guarda
+  for(var j=0;j<btns.length;j++){
+    (function(btn){
+      btn.addEventListener('click', function(){
+        apply(btn.dataset.themeBtn, true);
+      });
+    })(btns[j]);
+  }
+
+  // Si el usuario no ha elegido manualmente, seguir los cambios del sistema
+  var onChange = function(e){
+    var stored = null;
+    try{ stored = localStorage.getItem('sqlab-theme'); }catch(err){}
+    if(!stored) apply(e.matches ? 'dark' : 'light', false);
+  };
+  if(mql.addEventListener) mql.addEventListener('change', onChange);
+  else if(mql.addListener) mql.addListener(onChange);
+})();
+</script>
 </body>
 </html>
